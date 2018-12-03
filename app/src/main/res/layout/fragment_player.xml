@@ -22,6 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:textAlignment="textStart">
 
@@ -30,14 +31,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSubInfo"
-            android:textSize="16sp"/>
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/recordTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSubInfo"
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:text="2018/12/03 12:12:12"/>
 
     </LinearLayout>
 
@@ -45,15 +47,24 @@
         android:id="@+id/recordTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"/>
+        android:layout_margin="5dp"
+        android:textSize="24sp"
+        android:text="ヤバいCSVファイルでUFOSAを動かしたったwww"/>
 
+    <ToggleButton
+        android:id="@+id/playButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginVertical="5dp"
+        android:textOff="@string/play_start"
+        android:textOn="@string/play_pause" />
 
     <TextView
         android:id="@+id/playTimeText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
+        android:layout_margin="5dp"
         android:layout_weight="1"
         android:background="@drawable/text_frame"
         android:gravity="center_vertical|end"
@@ -63,20 +74,12 @@
         android:textAlignment="gravity"
         android:textSize="32sp" />
 
-    <ToggleButton
-        android:id="@+id/playButton"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginHorizontal="1dp"
-        android:textOff="@string/play_start"
-        android:textOn="@string/play_pause" />
-
     <SeekBar
         android:id="@+id/playTimeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_margin="5dp"
         android:backgroundTint="@color/colorPrimary"
         android:indeterminate="false"
         android:paddingTop="23dp"
@@ -88,7 +91,7 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="5dp">
+        android:layout_margin="5dp">
 
         <Button
             android:id="@+id/back1Button"
