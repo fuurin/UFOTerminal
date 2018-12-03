@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    tools:context=".UFOPlayerFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="1dp"
+        android:text="@string/play_header"
+        android:textColor="@color/colorOnStrong"
+        android:textSize="16sp"
+        android:background="@drawable/header"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textAlignment="textStart">
+
+        <TextView
+            android:text="@string/record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSubInfo"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/recordTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSubInfo"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/recordTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"/>
+
+
+    <TextView
+        android:id="@+id/playTimeText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="1"
+        android:background="@drawable/text_frame"
+        android:gravity="center_vertical|end"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="0.0"
+        android:textAlignment="gravity"
+        android:textSize="32sp" />
+
+    <ToggleButton
+        android:id="@+id/playButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="1dp"
+        android:textOff="@string/play_start"
+        android:textOn="@string/play_pause" />
+
+    <SeekBar
+        android:id="@+id/playTimeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/colorPrimary"
+        android:indeterminate="false"
+        android:paddingTop="23dp"
+        android:splitTrack="false"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="5dp">
+
+        <Button
+            android:id="@+id/back1Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/play_back_1" />
+
+        <Button
+            android:id="@+id/forward1Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/play_forward_1" />
+
+        <Button
+            android:id="@+id/forward5Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/play_forward_5" />
+
+        <Button
+            android:id="@+id/forward10Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/play_forward_10" />
+    </LinearLayout>
+
+</LinearLayout>

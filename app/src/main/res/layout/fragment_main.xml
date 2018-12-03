@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UFOMainFragment">
+
+    <LinearLayout
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_weight="0.8"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:text="@string/record_header"
+            android:textColor="@color/colorOnStrong"
+            android:background="@drawable/header"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:layout_margin="5dp"/>
+
+        <ToggleButton
+            android:id="@+id/recordButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:layout_weight="1"
+            android:button="@color/colorPrimary"
+            android:textOff="@string/record_start"
+            android:textOn="@string/record_stop" />
+
+        <ToggleButton
+            android:id="@+id/recordPauseButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:layout_weight="1"
+            android:button="@color/colorPrimary"
+            android:textOff="@string/record_pause"
+            android:textOn="@string/record_restart" />
+
+        <TextView
+            android:id="@+id/recordTimeText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/text_frame"
+            android:gravity="center_vertical|end"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="0.0"
+            android:textAlignment="gravity"
+            android:textSize="32sp" />
+
+        <Button
+            android:id="@+id/recordListButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:layout_weight="1"
+            android:text="@string/record_list_header" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:layout_weight="0.8"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:text="@string/control_header"
+            android:textColor="@color/colorOnStrong"
+            android:background="@drawable/header"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp" />
+
+        <ToggleButton
+            android:id="@+id/controlButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:layout_weight="1"
+            android:button="@color/colorPrimary"
+            android:textOff="@string/control_start"
+            android:textOn="@string/control_stop" />
+
+        <ToggleButton
+            android:id="@+id/controlRandomPowerButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="1dp"
+            android:layout_weight="1"
+            android:textOff="@string/control_random_power"
+            android:textOn="@string/control_random_power" />
+
+        <SeekBar
+            android:id="@+id/controlPowerSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorPrimary"
+            android:indeterminate="false"
+            android:max="100"
+            android:paddingTop="23dp"
+            android:splitTrack="false"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="5dp">
+
+            <Button
+                android:id="@+id/controlLeftButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@color/colorPrimary"
+                android:text="@string/control_left" />
+
+            <Button
+                android:id="@+id/controlRandomDirectionButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:button="@color/colorPrimary"
+                android:text="@string/control_random" />
+
+            <Button
+                android:id="@+id/controlRightButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/control_right" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
