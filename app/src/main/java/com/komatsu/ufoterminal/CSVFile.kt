@@ -5,9 +5,10 @@ import java.io.File
 import java.io.IOException
 
 
-class CSVFile(filesDir: String, fileNameWithoutDotExt: String) {
+class CSVFile(filesDir: String, val title: String) {
 
-    val file = File("$filesDir/$fileNameWithoutDotExt.csv")
+    val file = File("$filesDir/$title.csv")
+    val created = created(file)
 
     fun appendLine(data: List<String>): Boolean {
         file.appendText(data.joinToString(",") + "\n")
@@ -25,14 +26,18 @@ class CSVFile(filesDir: String, fileNameWithoutDotExt: String) {
         return true
     }
 
-    fun read(): List<List<String>> {
-        val data = mutableListOf<List<String>>()
+    fun read(adapt: (List<String>) -> Any): List<Any> {
+        val data = mutableListOf<Any>()
         if (!file.canRead()) return data
-        file.forEachLine { data.add(it.split(",")) }
+        file.forEachLine { data.add(adapt(it.split(","))) }
         return data.toList()
     }
 
-    fun created(pattern: String): String {
+    fun read(): List<List<String>> {
+        return read { it } as List<List<String>>
+    }
+
+    fun created(pattern: String = DEFAULT_CREATED_PATTERN): String {
         return created(file, pattern)
     }
 }

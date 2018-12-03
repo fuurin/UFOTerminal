@@ -1,9 +1,6 @@
 package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
-import android.support.v4.view.ViewCompat.setRotation
-import android.support.v7.widget.RecyclerView.EdgeEffectFactory.DIRECTION_LEFT
-import android.support.v7.widget.RecyclerView.EdgeEffectFactory.DIRECTION_RIGHT
 import java.util.*
 
 
@@ -19,9 +16,15 @@ class UFOController(
         fun onUpdateRotation(power: Byte, direction: Boolean)
     }
 
+    var power = 0
+    var direction = true
+    var isActive = false
+    var isRandomPower = false
+    var isRandomDirection = false
+
     fun updateRotation(power: Int, direction: Boolean) {
         if (!isActive || power > MAX_POWER || power < 0) return
-        if (this.power == power && this.direction == direction && power != 0) return
+        if (this.power == power && this.direction == direction) return
         if (!setRotation(power, direction)) return
 
         this.power = power
@@ -36,9 +39,10 @@ class UFOController(
 
 
     fun start(initPower: Int) {
-        if (characteristic == null) return
         isActive = true
-        updateRotation(initPower)
+        updateRotation(initPower, direction)
+        if (isRandomPower) startRandomPower()
+        if (isRandomDirection) startRandomDirection()
     }
 
     fun start() {
@@ -46,13 +50,15 @@ class UFOController(
     }
 
     fun stop() {
-        if (characteristic == null) return
+        stopRandomPower()
         stopRandomDir()
-        updateRotation(0, direction)
+        updateRotation(0)
         isActive = false
     }
 
     fun startRandomPower(period: Long) {
+        isRandomPower = true
+        if (!isActive) return
         powerTimer = Timer()
         powerTimer!!.scheduleAtFixedRate(randomPowerTask(), 0, period)
     }
@@ -62,10 +68,12 @@ class UFOController(
     }
 
     fun stopRandomPower() {
-        if (powerTimer == null) return
-        powerTimer!!.cancel()
-        powerTimer!!.purge()
-        powerTimer = null
+        isRandomPower = false
+        if (powerTimer != null) {
+            powerTimer!!.cancel()
+            powerTimer!!.purge()
+            powerTimer = null
+        }
     }
 
     fun stopRandomPower(newPower: Int) {
@@ -73,16 +81,16 @@ class UFOController(
         updateRotation(newPower)
     }
 
-    fun rotateRandomly() {
-        rotateRandomly(CHANGE_DIR_PERIOD)
+    fun startRandomDirection() {
+        startRandomDirection(CHANGE_DIR_PERIOD)
     }
 
-    fun rotateRight() {
+    fun startRightDirection() {
         stopRandomDir()
         updateRotation(power, DIRECTION_RIGHT)
     }
 
-    fun rotateLeft() {
+    fun startLeftDirection() {
         stopRandomDir()
         updateRotation(power, DIRECTION_LEFT)
     }
@@ -108,14 +116,14 @@ class UFOController(
     // ローターの最大回転スピード
     private val MAX_POWER = 100
 
-    // 回転スピードを変更する可能性のある機会の時間間隔(ミリ秒)
-    private val CHANGE_POWER_PERIOD: Long = 500
-
-    // 右方向
+    // 右回転
     private val DIRECTION_RIGHT = true
 
-    // 左方向
+    // 左回転
     private val DIRECTION_LEFT = false
+
+    // 回転スピードを変更する可能性のある機会の時間間隔(ミリ秒)
+    private val CHANGE_POWER_PERIOD: Long = 500
 
     // 回転方向を変更する可能性のある機会の時間間隔(ミリ秒)
     private val CHANGE_DIR_PERIOD: Long = 1000
@@ -125,16 +133,12 @@ class UFOController(
 
     private val service = gatt.getService(UUID.fromString(SERVICE_UUID))
     private val characteristic = service.getCharacteristic(UUID.fromString(CHARACTERISTIC_UUID))
-
-    private var isActive = false
-    private var power = 0
-    private var powerTimer: Timer? = null
-    private var direction = DIRECTION_RIGHT
-    private var directionTimer: Timer? = null
     private val rnd = Random()
 
+    private var powerTimer: Timer? = null
+    private var directionTimer: Timer? = null
+
     private fun setRotation(power: Int, direction: Boolean): Boolean {
-        if (characteristic == null) return false
         val newPower = power or if (direction == DIRECTION_RIGHT) 0 else ADDITION_TO_REVERSE
         characteristic.value = byteArrayOf(MACHINE_CODE, VORZE_CODE, newPower.toByte())
         return gatt.writeCharacteristic(characteristic)
@@ -158,15 +162,19 @@ class UFOController(
         }
     }
 
-    private fun rotateRandomly(period: Long) {
+    private fun startRandomDirection(period: Long) {
+        isRandomDirection = true
+        if (!isActive) return
         directionTimer = Timer()
         directionTimer!!.scheduleAtFixedRate(rotateRandomTask(), 0, period)
     }
 
     private fun stopRandomDir() {
-        if (directionTimer == null) return
-        directionTimer!!.cancel()
-        directionTimer!!.purge()
-        directionTimer = null
+        isRandomDirection = false
+        if (directionTimer != null) {
+            directionTimer!!.cancel()
+            directionTimer!!.purge()
+            directionTimer = null
+        }
     }
 }

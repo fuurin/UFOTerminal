@@ -70,10 +70,10 @@ class UFORecordListFragment : Fragment(),
         return CSVFile(filesDir, fileName).file
     }
 
-    private fun csvRecords(): List<UFORecord> {
+    private fun csvRecords(): List<UFORecordFile> {
         return File(filesDir).listFiles()
                 .filter { it.isFile && it.name.endsWith(".csv") }
-                .map { UFORecord(it.name.removeSuffix(".csv"), created(it)) }
+                .map { UFORecordFile(it.name.removeSuffix(".csv"), created(it)) }
     }
 
     private fun rename(oldName: String, newName: String) {

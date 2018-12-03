@@ -11,7 +11,23 @@ fun Any?.log() {
     Log.v("DEBUG", this.toString())
 }
 
-fun created(file: File, pattern: String="yyyy-MM-dd HH:mm:ss"): String {
+const val UNIT_PERIOD: Float = 100f
+
+fun Float.timeFormat(): String {
+    return String.format("%.1f", this)
+}
+
+fun Float.toUnitPeriods(): Int {
+    return (this * (1000 / UNIT_PERIOD)).toInt()
+}
+
+fun Int.toSecond(): Float {
+    return this * (UNIT_PERIOD / 1000)
+}
+
+const val DEFAULT_CREATED_PATTERN: String = "yyyy-MM-dd HH:mm:ss"
+
+fun created(file: File, pattern: String= DEFAULT_CREATED_PATTERN): String {
     if (!file.isFile) return ""
     val attrs = Files.readAttributes(file.toPath(), BasicFileAttributes::class.java)
     val time = attrs.creationTime()
