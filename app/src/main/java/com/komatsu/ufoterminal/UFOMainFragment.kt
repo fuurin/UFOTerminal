@@ -23,12 +23,17 @@ class UFOMainFragment : Fragment(),
         this.recorder = recorder
         initView()
         attachEvents()
+        start()
+    }
+
+    fun start() {
         control(controlButton.isChecked)
     }
 
     fun stopAll() {
         controller.stop() // 本当はrecorder.stopでstopできる
         recorder.stop()
+        initView()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,8 +74,10 @@ class UFOMainFragment : Fragment(),
     private fun initView() {
         recordButton.isChecked = false
         recordPauseButton.isChecked = false
+        recordTimeText.text = 0.0f.timeFormat()
         controlButton.isChecked = true
         controlRandomPowerButton.isChecked = false
+        controlPowerSeekBar.progress = 0
     }
 
     private fun attachEvents() {

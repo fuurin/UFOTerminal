@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(),
         connectionButton.isChecked = false
     }
 
-    override fun onDisconnect() {
+    override fun onDisconnectStart() {
         connectionStateText.text = getString(R.string.disconnected)
         connectionButton.isChecked = false
         mainFragment.stopAll()
@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDisconnectCancel() {
         connectionButton.isChecked = true
+        if (mainFragment.isVisible) mainFragment.start()
+        // TODO playerでの一時停止解除処理
     }
 
     override fun onUFOMainFragmentViewCreated() {
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity(),
     private fun connection() {
         if (connectionButton.isChecked) bleConnector.connect(deviceName)
         else {
-            controller.stop()
+            controller.pause()
             bleConnector.disconnect(true)
         }
     }

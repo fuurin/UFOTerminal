@@ -21,7 +21,7 @@ class UFOPlayerFragment : Fragment(),
     }
 
     fun stopAll() {
-        if (player != null) player.end()
+        if (this::player.isInitialized) player.end()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

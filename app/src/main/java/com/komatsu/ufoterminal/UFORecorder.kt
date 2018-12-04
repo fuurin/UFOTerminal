@@ -70,10 +70,8 @@ class UFORecorder(
     }
 
     private fun stopRecord() {
-        if (timer != null) {
-            timer?.cancel()
-            timer = null
-        }
+        timer?.cancel()
+        timer = null
         listener.onRecordStop()
     }
 

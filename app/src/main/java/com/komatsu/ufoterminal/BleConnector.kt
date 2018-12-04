@@ -24,7 +24,7 @@ class BleConnector(
         fun onConnect(gatt: BluetoothGatt)
         fun onStartConnect()
         fun onTimeout()
-        fun onDisconnect()
+        fun onDisconnectStart()
         fun onDisconnectCancel()
     }
 
@@ -138,13 +138,13 @@ class BleConnector(
     }
 
     private fun disconnect() {
+        listener.onDisconnectStart()
         if (isScanning) stopScan()
         if (blGatt != null) {
             (blGatt as BluetoothGatt).apply { disconnect(); close(); }
             blGatt = null
             isConnected = false
         }
-        listener.onDisconnect()
     }
 
     fun disconnect(confirm: Boolean = false) {

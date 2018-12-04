@@ -19,18 +19,11 @@ class UFOController(
     var power = 0
     var direction = true
     var isActive = false
-    var isRandomPower = false
-    var isRandomDirection = false
 
-    fun updateRotation(power: Int, direction: Boolean) {
-        if (!isActive || power > MAX_POWER || power < 0) return
-        if (this.power == power && this.direction == direction) return
-        if (!setRotation(power, direction)) return
-
-        this.power = power
-        this.direction = direction
-
-        listener?.onUpdateRotation(power.toByte(), direction)
+    fun updateRotation(power: Int, direction: Boolean): Boolean {
+        if (!isActive || power > MAX_POWER || power < 0) return false
+        if (this.power == power && this.direction == direction) return false
+        return setRotation(power, direction)
     }
 
     fun updateRotation(power: Int) {
@@ -38,40 +31,31 @@ class UFOController(
     }
 
 
-    fun start(initPower: Int=power) {
+    fun start(initPower: Int=power, initDirection: Boolean=direction) {
         isActive = true
-        updateRotation(initPower, direction)
-        if (isRandomPower) startRandomPower()
-        if (isRandomDirection) startRandomDirection()
+        updateRotation(initPower, initDirection)
     }
 
     fun pause() {
-        stopRandomPower(true)
-        stopRandomDirection(true)
-        updateRotation(0)
         isActive = false
+        while(!setRotation(0, direction)){} // 0が送れないことがあるので止まるまで止め続ける
     }
 
     fun stop() {
+        pause()
         stopRandomPower()
         stopRandomDirection()
-        updateRotation(0)
-        isActive = false
     }
 
     fun startRandomPower(period: Long=CHANGE_POWER_PERIOD) {
-        isRandomPower = true
-        if (!isActive) return
         powerTimer = Timer()
         powerTimer!!.scheduleAtFixedRate(randomPowerTask(), 0, period)
     }
 
-    fun stopRandomPower(pause:Boolean = false) {
-        isRandomPower = pause
-        if (powerTimer != null) {
-            powerTimer!!.cancel()
-            powerTimer = null
-        }
+    fun stopRandomPower() {
+        if (powerTimer == null) return // .?演算子がなんか効かないのでnullチェック
+        powerTimer!!.cancel()
+        powerTimer = null // timerはnullで破棄しないと終わらない
     }
 
     fun stopRandomPower(newPower: Int) {
@@ -80,18 +64,14 @@ class UFOController(
     }
 
     fun startRandomDirection(period: Long=CHANGE_DIR_PERIOD) {
-        isRandomDirection = true
-        if (!isActive) return
         directionTimer = Timer()
         directionTimer!!.scheduleAtFixedRate(randomDirectionTask(), 0, period)
     }
 
-    fun stopRandomDirection(pause:Boolean=false) {
-        isRandomDirection = pause
-        if (directionTimer != null) {
-            directionTimer?.cancel()
-            directionTimer = null
-        }
+    fun stopRandomDirection() {
+        if (directionTimer == null) return
+        directionTimer!!.cancel()
+        directionTimer = null
     }
 
     fun startRightDirection() {
@@ -150,7 +130,13 @@ class UFOController(
     private fun setRotation(power: Int, direction: Boolean): Boolean {
         val newPower = power or if (direction == DIRECTION_RIGHT) 0 else ADDITION_TO_REVERSE
         characteristic.value = byteArrayOf(MACHINE_CODE, VORZE_CODE, newPower.toByte())
-        return gatt.writeCharacteristic(characteristic)
+        if (!gatt.writeCharacteristic(characteristic)) return false
+
+        this.power = power
+        this.direction = direction
+
+        listener?.onUpdateRotation(power.toByte(), direction)
+        return true
     }
 
     private fun randomPowerTask(): TimerTask {
