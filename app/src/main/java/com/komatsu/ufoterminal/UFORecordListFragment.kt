@@ -16,6 +16,9 @@ import java.io.File
 class UFORecordListFragment : Fragment(),
         UFORecordRecyclerAdapter.OnRecyclerListener {
 
+    private lateinit var listener: RecordListFragmentListener
+    private lateinit var filesDir: String
+
     interface RecordListFragmentListener {
         fun onOpenPlayer(fileName: String)
     }
@@ -62,9 +65,6 @@ class UFORecordListFragment : Fragment(),
                 .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
                 .create().show()
     }
-
-    private lateinit var listener: RecordListFragmentListener
-    private lateinit var filesDir: String
 
     private fun csvFile(fileName: String): File {
         return CSVFile(filesDir, fileName).file

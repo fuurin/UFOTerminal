@@ -7,16 +7,21 @@ class UFOPlayer(
         private val controller: UFOController,
         private val listener: PlayerListener?) {
 
-    interface PlayerListener {
-        fun onUpdateTime(time: Float)
-        fun onPlayFinished()
-    }
-
     val record = file.read {
         UFORecord(
                 it[0].toInt(), it[1] === "0", it[2].toByte()
         )
     } as List<UFORecord>
+
+    private var time: Int = 0
+    private var currentId: Int = 0
+    private var currentRecord: UFORecord = record[currentId]
+    private var timer: Timer? = null
+
+    interface PlayerListener {
+        fun onUpdateTime(time: Float)
+        fun onPlayFinished()
+    }
 
     fun updatePlayTime(time: Int) {
         this.time = time
@@ -46,11 +51,6 @@ class UFOPlayer(
     fun backward(minus: Float) {
         updatePlayTime(time - minus.toUnitPeriods())
     }
-
-    private var time: Int = 0
-    private var currentId: Int = 0
-    private var currentRecord: UFORecord = record[currentId]
-    private var timer: Timer? = null
 
     private fun playTask(): TimerTask {
         return object : TimerTask() {

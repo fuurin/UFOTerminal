@@ -15,6 +15,13 @@ import kotlinx.android.synthetic.main.fragment_connection.*
 class UFOConnectionFragment : Fragment(),
         BleConnector.BleConnectorListener{
 
+    private lateinit var listener: ConnectionFragmentListener
+    private lateinit var connector: BleConnector
+
+    companion object {
+        const val DEVISE_NAME = "UFOSA"
+    }
+
     interface ConnectionFragmentListener {
         fun onConnect(gatt: BluetoothGatt)
         fun onDisconnectConfirm()
@@ -36,7 +43,7 @@ class UFOConnectionFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        connector = BleConnector(activity?: return, this)
+        connector = BleConnector(activity?: return, DEVISE_NAME, this)
         connectionButton.setOnClickListener { connection((it as ToggleButton).isChecked) }
     }
 
@@ -48,7 +55,7 @@ class UFOConnectionFragment : Fragment(),
     override fun onConnect(gatt: BluetoothGatt) {
         connectionStateText.text = getString(R.string.connected)
         connectionButton.isChecked = true
-        onConnect(gatt)
+        listener.onConnect(gatt)
     }
 
     override fun onTimeout() {
@@ -56,21 +63,12 @@ class UFOConnectionFragment : Fragment(),
         connectionButton.isChecked = false
     }
 
-    private val deviceName = "UFOSA"
-
-    lateinit private var listener: ConnectionFragmentListener
-    lateinit private var connector: BleConnector
-    lateinit private var controller: UFOController
-
     private fun connection(checked: Boolean) {
-        if (checked) connect() else disconnect()
-    }
-
-    private fun connect() {
-        connector.connect(deviceName)
+        if (checked) connector.connect() else disconnect()
     }
 
     private fun disconnect(confirm: Boolean = true) {
+        if (!connector.isConnected) return
         if (confirm) {
             disconnectConfirm()
             AlertDialog.Builder(activity)
@@ -83,19 +81,18 @@ class UFOConnectionFragment : Fragment(),
     }
 
     private fun disconnectConfirm() {
-        controller.pause()
+        connectionButton.isChecked = true
         listener.onDisconnectConfirm()
     }
 
     private fun disconnectStart() {
-        connector.disconnect()
+        listener.onDisconnectStart()
         connectionStateText.text = getString(R.string.disconnected)
         connectionButton.isChecked = false
-        listener.onDisconnectStart()
+        connector.disconnect()
     }
 
     private fun disconnectCancel() {
-        connectionButton.isChecked = true
         listener.onDisconnectCancel()
     }
 }

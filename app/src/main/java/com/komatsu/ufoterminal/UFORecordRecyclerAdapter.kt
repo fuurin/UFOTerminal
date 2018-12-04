@@ -28,6 +28,7 @@ class UFORecordRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): UFORecordRecyclerAdapter.ViewHolder {
+        val inflater: LayoutInflater = LayoutInflater.from(context)
         return UFORecordRecyclerAdapter.ViewHolder(inflater.inflate(R.layout.record_item, p0, false))
     }
 
@@ -45,6 +46,4 @@ class UFORecordRecyclerAdapter(
         vh.itemView.recordRename.setOnClickListener { listener.onRecordRenameStart(data[i].title) }
         vh.itemView.recordDelete.setOnClickListener { listener.onRecordDeleteStart(data[i].title) }
     }
-
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
 }

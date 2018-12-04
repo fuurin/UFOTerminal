@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothGatt
 import android.widget.SeekBar
 
 class UFOControllerSeekBarListener(
-        val controller: UFOController
+        private val controller: UFOController
 ): SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

@@ -14,10 +14,22 @@ import android.util.Log
 
 class BleConnector(
         private val activity: Activity,
+        private val deviceName: String,
         private val listener: BleConnectorListener,
         var scanTimeOutPeriod: Long = 10000,
         private val forceActiveDevice: Boolean = true
 ) {
+
+    var isScanning = false
+    var isConnected = false
+    private lateinit var scanCallback: ScanCallback // scan start/stopは同じ参照のコールバックである必要がある
+
+    private val btManager: BluetoothManager = activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    private val btAdapter: BluetoothAdapter = btManager.adapter
+    private val bleScanner: BluetoothLeScanner = btAdapter.bluetoothLeScanner
+    private val scanStopHandler: Handler = Handler()
+
+    private var blGatt: BluetoothGatt? = null
 
     interface BleConnectorListener {
         fun onConnect(gatt: BluetoothGatt)
@@ -26,16 +38,11 @@ class BleConnector(
     }
 
     init {
-        if (forceActiveDevice) {
-            forceBluetoothOn()
-            forceLocationSourceOn()
-        }
+        forceActiveDevice()
     }
 
-    fun connect(deviceName: String) {
-        if (!bleIsEnabled()) forceBluetoothOn()
-        if (!locationSourceIsEnabled()) forceLocationSourceOn()
-        this.deviceName = deviceName
+    fun connect() {
+        forceActiveDevice()
         scanStopHandler.postDelayed(scanFailedCallback, scanTimeOutPeriod)
         listener.onStartConnect()
         startScan()
@@ -50,63 +57,12 @@ class BleConnector(
         }
     }
 
-    var isScanning = false
-    var isConnected = false
-    lateinit var deviceName: String
-
-    private val btManager: BluetoothManager = activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val btAdapter: BluetoothAdapter = btManager.adapter
-    private val bleScanner: BluetoothLeScanner = btAdapter.bluetoothLeScanner
-    private val scanStopHandler: Handler = Handler()
-
-    private var blGatt: BluetoothGatt? = null
-
-
-    private val scanFailedCallback = Runnable {
-        if (isScanning) {
-            listener.onTimeout()
-            stopScan()
+    private fun forceActiveDevice() {
+        if (forceActiveDevice) {
+            forceLocationSourceOn()
+            forceBluetoothOn()
         }
     }
-
-    private val scanCallbacks = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            super.onScanResult(callbackType, result)
-
-            // ここにたどり着かなければ，設定からアプリの現在位置取得権限を手動で許可する．
-            "GET_SCAN_RESULT".log()
-
-            val device = (result ?: return).device ?: return
-
-            if (device.name != null) device.name.log()
-            if (deviceName != device.name) return
-
-            stopScan()
-            scanStopHandler.removeCallbacksAndMessages(null) // TODO: なぜか一度接続した後切断してもう一度つなぐと10秒ほど待たされる．
-
-            device.connectGatt(activity, true, gattCallbacks).connect()
-        }
-    }
-
-    private val gattCallbacks = object : BluetoothGattCallback() {
-        override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-            super.onConnectionStateChange(gatt, status, newState)
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                blGatt = gatt ?: return
-                gatt.discoverServices()
-            }
-            if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                disconnect()
-            }
-        }
-
-        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            super.onServicesDiscovered(gatt, status)
-            isConnected = true
-            listener.onConnect(gatt ?: return)
-        }
-    }
-
 
     private fun bleIsEnabled(): Boolean {
         return btAdapter.isEnabled
@@ -126,20 +82,73 @@ class BleConnector(
     private fun forceLocationSourceOn() {
         if (locationSourceIsEnabled()) return
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        activity.startActivityForResult(intent, 2)
+        activity.startActivityForResult(intent, 0)
     }
 
     private fun startScan() {
         if (isScanning) return
         Log.v("DEBUG", "START SCAN")
-        bleScanner.startScan(scanCallbacks)
+        scanCallback = scanCallbacks()
+        bleScanner.startScan(scanCallback)
         isScanning = true
     }
 
     private fun stopScan() {
         if (!isScanning) return
         Log.v("DEBUG", "STOP SCAN")
-        bleScanner.stopScan(scanCallbacks)
+        bleScanner.stopScan(scanCallback)
         isScanning = false
+    }
+
+    private val scanFailedCallback = Runnable {
+        if (isScanning) {
+            listener.onTimeout()
+            stopScan()
+        }
+    }
+
+    // start/stopが同じオブジェクトである必要があるため，例外的にvalの形で持つ．
+    // そうしないと無限にscanを続ける．
+    private fun scanCallbacks(): ScanCallback {
+        return object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                super.onScanResult(callbackType, result)
+
+                // ここにたどり着かなければ，設定からアプリの現在位置取得権限を手動で許可する．
+                "GET_SCAN_RESULT".log()
+
+                val device = (result ?: return).device ?: return
+
+                if (device.name != null) device.name.log()
+                if (deviceName != device.name) return
+
+                stopScan()
+                scanStopHandler.removeCallbacksAndMessages(null) // TODO: なぜか一度接続した後切断してもう一度つなぐと10秒ほど待たされる．
+
+                device.connectGatt(activity, true, gattCallbacks()).connect()
+            }
+        }
+    }
+
+    private fun gattCallbacks(): BluetoothGattCallback {
+        return object : BluetoothGattCallback() {
+            override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+                super.onConnectionStateChange(gatt, status, newState)
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    blGatt = gatt ?: return
+                    gatt.discoverServices()
+                }
+                if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    disconnect()
+                }
+            }
+
+            override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+                super.onServicesDiscovered(gatt, status)
+                if (gatt == null) return
+                isConnected = true
+                listener.onConnect(gatt)
+            }
+        }
     }
 }

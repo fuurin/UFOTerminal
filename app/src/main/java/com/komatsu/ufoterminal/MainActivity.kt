@@ -10,6 +10,14 @@ class MainActivity : AppCompatActivity(),
         UFOMainFragment.MainFragmentListener,
         UFORecordListFragment.RecordListFragmentListener {
 
+    private val fm = supportFragmentManager
+    private val mainFragment: UFOMainFragment = UFOMainFragment()
+    private val playerFragment: UFOPlayerFragment = UFOPlayerFragment()
+
+    // 無駄な !! を防ぐため，「あとで初期化するから待ってて」のlateinitを使用
+    private lateinit var controller: UFOController
+    private lateinit var recorder: UFORecorder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,14 +59,6 @@ class MainActivity : AppCompatActivity(),
         playerFragment.initPlayer(this, fileName, controller)
         replaceFragment(playerFragment)
     }
-
-    private val fm = supportFragmentManager
-    private val mainFragment: UFOMainFragment = UFOMainFragment()
-    private val playerFragment: UFOPlayerFragment = UFOPlayerFragment()
-
-    // 無駄な !! を防ぐため，「あとで初期化するから待ってて」のlateinitを使用
-    private lateinit var controller: UFOController
-    private lateinit var recorder: UFORecorder
 
     private fun initFragment() {
         fm.backStackEntryCount.loop { fm.popBackStack() }

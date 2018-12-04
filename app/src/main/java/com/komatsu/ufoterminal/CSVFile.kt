@@ -36,8 +36,4 @@ class CSVFile(filesDir: String, val title: String) {
     fun read(): List<List<String>> {
         return read { it } as List<List<String>>
     }
-
-    fun created(pattern: String = DEFAULT_CREATED_PATTERN): String {
-        return created(file, pattern)
-    }
 }

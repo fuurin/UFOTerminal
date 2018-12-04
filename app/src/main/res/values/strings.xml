@@ -8,7 +8,7 @@
     <string name="disconnected">接続されていません</string>
     <string name="timeout">タイムアウトしました</string>
     <string name="confirm_disconnect_title">通信切断</string>
-    <string name="confirm_disconnect_message">本当にUFOとの接続を切断しますか？</string>
+    <string name="confirm_disconnect_message">本当に通信を切断しますか？</string>
     <string name="confirm_ok">はい</string>
     <string name="confirm_cancel">いいえ</string>
     <string name="record_header">記録</string>

@@ -14,6 +14,10 @@ import kotlinx.android.synthetic.main.fragment_player.*
 class UFOPlayerFragment : Fragment(),
         UFOPlayer.PlayerListener {
 
+    private lateinit var file: CSVFile
+    private lateinit var player: UFOPlayer
+    private lateinit var playerSeekBarListener: UFOPlayerSeekBarListener
+
     fun initPlayer(activity: Activity, fileName: String, controller: UFOController) {
         file = CSVFile(activity.filesDir.path, fileName)
         player = UFOPlayer(file, controller, this)
@@ -50,10 +54,6 @@ class UFOPlayerFragment : Fragment(),
         super.onDetach()
         player.end()
     }
-
-    private lateinit var file: CSVFile
-    private lateinit var player: UFOPlayer
-    private lateinit var playerSeekBarListener: UFOPlayerSeekBarListener
 
     private fun initView() {
         playCreatedTime.text = file.created

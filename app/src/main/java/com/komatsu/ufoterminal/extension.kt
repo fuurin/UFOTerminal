@@ -39,3 +39,7 @@ fun created(file: File, pattern: String= DEFAULT_CREATED_PATTERN): String {
     val dateFormat = SimpleDateFormat(pattern)
     return dateFormat.format(Date(time.toMillis()))
 }
+
+fun CSVFile.created(pattern: String = DEFAULT_CREATED_PATTERN): String {
+    return created(file, pattern)
+}

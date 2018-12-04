@@ -10,6 +10,12 @@ class UFORecorder(
         private val listener: OnRecordTimeChangedListener
 ) : UFOController.OnUpdateRotationListener {
 
+    private var isRecording: Boolean = false
+    private var timer: Timer? = null
+    private var time: Int = 0
+    private var lastRecord: UFORecord = UFORecord(0, true, 0)
+    private var record: MutableList<UFORecord> = mutableListOf()
+
     interface OnRecordTimeChangedListener {
         fun onRecordTimeChanged(time: Float)
         fun onRecordStart()
@@ -42,31 +48,20 @@ class UFORecorder(
         openSaveDialog()
     }
 
+    override fun onUpdateRotation(power: Int, direction: Boolean) {
+        if (
+            !isRecording ||
+            lastRecord.time == time ||
+            (lastRecord.direction == direction && lastRecord.power == power.toByte())
+        ) return
 
-    override fun onUpdateRotation(power: Byte, direction: Boolean) {
-        if (!isRecording || lastRecord.time == time || (lastRecord.direction == direction && lastRecord.power == power)) return
-        val newRecord = UFORecord(time, direction, power)
+        val newRecord = UFORecord(time, direction, power.toByte())
         record.add(newRecord)
         lastRecord = newRecord
     }
 
-    private var isRecording: Boolean = false
-    private var timer: Timer? = null
-    private var time: Int = 0
-    private var lastRecord: UFORecord = UFORecord(0, true, 0)
-    private var record: MutableList<UFORecord> = mutableListOf()
-
     private fun updateRecordTime() {
         listener.onRecordTimeChanged(time.toSecond())
-    }
-
-    private fun recordTask(): TimerTask {
-        return object : TimerTask() {
-            override fun run() {
-                time++
-                updateRecordTime()
-            }
-        }
     }
 
     private fun stopRecord() {
@@ -89,7 +84,7 @@ class UFORecorder(
     }
 
     private fun save(filename: String) {
-        if (record.isEmpty()) return
+        if (record.isEmpty() || filename == "") return
         val strRecord: List<List<String>> = record.map {
             listOf(
                 it.time.toString(),
@@ -98,6 +93,7 @@ class UFORecorder(
             )
         }
         CSVFile(activity.filesDir.path, filename).write(strRecord)
+        initRecorder()
     }
 
     private fun initRecorder() {
@@ -105,5 +101,14 @@ class UFORecorder(
         lastRecord = UFORecord(0, true, 0)
         time = 0
         updateRecordTime()
+    }
+
+    private fun recordTask(): TimerTask {
+        return object : TimerTask() {
+            override fun run() {
+                time++
+                updateRecordTime()
+            }
+        }
     }
 }

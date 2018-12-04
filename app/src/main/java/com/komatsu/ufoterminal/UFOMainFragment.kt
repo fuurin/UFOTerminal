@@ -13,6 +13,11 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class UFOMainFragment : Fragment(),
         UFORecorder.OnRecordTimeChangedListener {
 
+    private lateinit var listener: MainFragmentListener
+    private lateinit var controller: UFOController
+    private lateinit var controllerSeekBarListener: UFOControllerSeekBarListener
+    private lateinit var recorder: UFORecorder
+
     interface MainFragmentListener {
         fun onUFOMainFragmentViewCreated()
         fun onOpenRecordList()
@@ -65,11 +70,6 @@ class UFOMainFragment : Fragment(),
         controlRandomPowerButton?.isChecked = false
         controller.stop()
     }
-
-    private lateinit var listener: MainFragmentListener
-    private lateinit var controller: UFOController
-    private lateinit var recorder: UFORecorder
-    private lateinit var controllerSeekBarListener: UFOControllerSeekBarListener
 
     private fun initView() {
         recordButton.isChecked = false
