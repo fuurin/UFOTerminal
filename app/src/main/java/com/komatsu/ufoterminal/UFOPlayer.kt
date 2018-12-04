@@ -84,7 +84,6 @@ class UFOPlayer(
     private fun stopPlay() {
         if (timer != null) {
             timer?.cancel()
-            timer?.purge()
             timer = null
         }
     }

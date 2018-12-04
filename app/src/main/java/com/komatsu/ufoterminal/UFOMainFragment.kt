@@ -99,7 +99,7 @@ class UFOMainFragment : Fragment(),
     }
 
     private fun control(checked: Boolean) {
-        controller.apply { if (checked) start(currentPower()) else stop() }
+        controller.apply { if (checked) start(currentPower()) else pause() }
     }
 
     private fun randomPower(checked: Boolean) {

@@ -72,7 +72,6 @@ class UFORecorder(
     private fun stopRecord() {
         if (timer != null) {
             timer?.cancel()
-            timer?.purge()
             timer = null
         }
         listener.onRecordStop()

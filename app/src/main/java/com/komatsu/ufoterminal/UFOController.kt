@@ -38,40 +38,38 @@ class UFOController(
     }
 
 
-    fun start(initPower: Int) {
+    fun start(initPower: Int=power) {
         isActive = true
         updateRotation(initPower, direction)
         if (isRandomPower) startRandomPower()
         if (isRandomDirection) startRandomDirection()
     }
 
-    fun start() {
-        start(power)
-    }
-
-    fun stop() {
-        stopRandomPower()
-        stopRandomDir()
+    fun pause() {
+        stopRandomPower(true)
+        stopRandomDirection(true)
         updateRotation(0)
         isActive = false
     }
 
-    fun startRandomPower(period: Long) {
+    fun stop() {
+        stopRandomPower()
+        stopRandomDirection()
+        updateRotation(0)
+        isActive = false
+    }
+
+    fun startRandomPower(period: Long=CHANGE_POWER_PERIOD) {
         isRandomPower = true
         if (!isActive) return
         powerTimer = Timer()
         powerTimer!!.scheduleAtFixedRate(randomPowerTask(), 0, period)
     }
 
-    fun startRandomPower() {
-        startRandomPower(CHANGE_POWER_PERIOD)
-    }
-
-    fun stopRandomPower() {
-        isRandomPower = false
+    fun stopRandomPower(pause:Boolean = false) {
+        isRandomPower = pause
         if (powerTimer != null) {
             powerTimer!!.cancel()
-            powerTimer!!.purge()
             powerTimer = null
         }
     }
@@ -81,17 +79,28 @@ class UFOController(
         updateRotation(newPower)
     }
 
-    fun startRandomDirection() {
-        startRandomDirection(CHANGE_DIR_PERIOD)
+    fun startRandomDirection(period: Long=CHANGE_DIR_PERIOD) {
+        isRandomDirection = true
+        if (!isActive) return
+        directionTimer = Timer()
+        directionTimer!!.scheduleAtFixedRate(randomDirectionTask(), 0, period)
+    }
+
+    fun stopRandomDirection(pause:Boolean=false) {
+        isRandomDirection = pause
+        if (directionTimer != null) {
+            directionTimer?.cancel()
+            directionTimer = null
+        }
     }
 
     fun startRightDirection() {
-        stopRandomDir()
+        stopRandomDirection()
         updateRotation(power, DIRECTION_RIGHT)
     }
 
     fun startLeftDirection() {
-        stopRandomDir()
+        stopRandomDirection()
         updateRotation(power, DIRECTION_LEFT)
     }
 
@@ -153,28 +162,12 @@ class UFOController(
         }
     }
 
-    private fun rotateRandomTask(): TimerTask {
+    private fun randomDirectionTask(): TimerTask {
         return object : TimerTask() {
             override fun run() {
                 val newDirection = rnd.nextInt(100 / CHANGE_DIR_POSSIBILITY) == 0
                 if (newDirection != direction) updateRotation(power, newDirection)
             }
-        }
-    }
-
-    private fun startRandomDirection(period: Long) {
-        isRandomDirection = true
-        if (!isActive) return
-        directionTimer = Timer()
-        directionTimer!!.scheduleAtFixedRate(rotateRandomTask(), 0, period)
-    }
-
-    private fun stopRandomDir() {
-        isRandomDirection = false
-        if (directionTimer != null) {
-            directionTimer!!.cancel()
-            directionTimer!!.purge()
-            directionTimer = null
         }
     }
 }
