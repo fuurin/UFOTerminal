@@ -38,18 +38,21 @@ class MainActivity : AppCompatActivity(),
         connectionButton.isChecked = false
     }
 
-    override fun onDisconnect() {
+    override fun onDisconnectStart() {
         connectionStateText.text = getString(R.string.disconnected)
         connectionButton.isChecked = false
         mainFragment.stopAll()
+        playerFragment.stopAll()
         initFragment()
     }
 
     override fun onDisconnectCancel() {
         connectionButton.isChecked = true
+        if (mainFragment.isVisible) mainFragment.start()
+        // TODO playerでの一時停止解除処理
     }
 
-    override fun onMainFragmentViewCreated() {
+    override fun onUFOMainFragmentViewCreated() {
         mainFragment.ready(controller, recorder)
     }
 
@@ -59,12 +62,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOpenPlayer(fileName: String) {
-        fileName.log()
+        playerFragment.initPlayer(this, fileName, controller)
+        replaceFragment(playerFragment)
     }
 
     private val deviceName = "UFOSA"
     private val fm = supportFragmentManager
     private val mainFragment: UFOMainFragment = UFOMainFragment()
+    private val playerFragment: UFOPlayerFragment = UFOPlayerFragment()
 
     // 無駄な !! を防ぐため，「あとで初期化するから待ってて」のlateinitを使用
     private lateinit var bleConnector: BleConnector
@@ -88,7 +93,7 @@ class MainActivity : AppCompatActivity(),
     private fun connection() {
         if (connectionButton.isChecked) bleConnector.connect(deviceName)
         else {
-            controller.stop()
+            controller.pause()
             bleConnector.disconnect(true)
         }
     }

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.record_item.view.*
 
 class UFORecordRecyclerAdapter(
         private val context: Context?,
-        private val data: List<UFORecord>,
+        private val data: List<UFORecordFile>,
         private val listener: OnRecyclerListener
 ) : RecyclerView.Adapter<UFORecordRecyclerAdapter.ViewHolder>() {
 

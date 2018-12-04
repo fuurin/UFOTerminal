@@ -1,6 +1,7 @@
 package com.komatsu.ufoterminal
 
-class UFORecord(
-        val title: String,
-        val created: String
+data class UFORecord(
+    val time: Int,
+    val direction: Boolean,
+    val power: Byte
 )

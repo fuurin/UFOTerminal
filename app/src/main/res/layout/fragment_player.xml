@@ -34,22 +34,22 @@
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/recordTime"
+            android:id="@+id/playCreatedTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="2018/12/03 12:12:12"
             android:textColor="@color/colorSubInfo"
-            android:textSize="12sp"
-            android:text="2018/12/03 12:12:12"/>
+            android:textSize="12sp" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/recordTitle"
+        android:id="@+id/playTitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textSize="24sp"
-        android:text="ヤバいCSVファイルでUFOSAを動かしたったwww"/>
+        android:text="ヤバいCSVファイルでUFOSAを動かしたったwww"
+        android:textSize="24sp" />
 
     <ToggleButton
         android:id="@+id/playButton"
