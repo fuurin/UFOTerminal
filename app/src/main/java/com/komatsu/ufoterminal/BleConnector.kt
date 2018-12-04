@@ -1,7 +1,6 @@
 package com.komatsu.ufoterminal
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.bluetooth.*
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -17,15 +16,38 @@ class BleConnector(
         private val activity: Activity,
         private val listener: BleConnectorListener,
         var scanTimeOutPeriod: Long = 10000,
-        private val activeDevice: Boolean = true
+        private val forceActiveDevice: Boolean = true
 ) {
 
     interface BleConnectorListener {
         fun onConnect(gatt: BluetoothGatt)
         fun onStartConnect()
         fun onTimeout()
-        fun onDisconnectStart()
-        fun onDisconnectCancel()
+    }
+
+    init {
+        if (forceActiveDevice) {
+            forceBluetoothOn()
+            forceLocationSourceOn()
+        }
+    }
+
+    fun connect(deviceName: String) {
+        if (!bleIsEnabled()) forceBluetoothOn()
+        if (!locationSourceIsEnabled()) forceLocationSourceOn()
+        this.deviceName = deviceName
+        scanStopHandler.postDelayed(scanFailedCallback, scanTimeOutPeriod)
+        listener.onStartConnect()
+        startScan()
+    }
+
+    fun disconnect() {
+        if (isScanning) stopScan()
+        if (blGatt != null) {
+            (blGatt as BluetoothGatt).apply { disconnect(); close(); }
+            blGatt = null
+            isConnected = false
+        }
     }
 
     var isScanning = false
@@ -39,12 +61,6 @@ class BleConnector(
 
     private var blGatt: BluetoothGatt? = null
 
-    init {
-        if (activeDevice) {
-            forceBluetoothOn()
-            forceLocationSourceOn()
-        }
-    }
 
     private val scanFailedCallback = Runnable {
         if (isScanning) {
@@ -113,7 +129,6 @@ class BleConnector(
         activity.startActivityForResult(intent, 2)
     }
 
-
     private fun startScan() {
         if (isScanning) return
         Log.v("DEBUG", "START SCAN")
@@ -127,35 +142,4 @@ class BleConnector(
         bleScanner.stopScan(scanCallbacks)
         isScanning = false
     }
-
-    fun connect(deviceName: String) {
-        if (!bleIsEnabled()) forceBluetoothOn()
-        if (!locationSourceIsEnabled()) forceLocationSourceOn()
-        this.deviceName = deviceName
-        scanStopHandler.postDelayed(scanFailedCallback, scanTimeOutPeriod)
-        listener.onStartConnect()
-        startScan()
-    }
-
-    private fun disconnect() {
-        listener.onDisconnectStart()
-        if (isScanning) stopScan()
-        if (blGatt != null) {
-            (blGatt as BluetoothGatt).apply { disconnect(); close(); }
-            blGatt = null
-            isConnected = false
-        }
-    }
-
-    fun disconnect(confirm: Boolean = false) {
-        if (confirm)
-            AlertDialog.Builder(activity)
-                .setTitle(R.string.confirm_disconnect_title)
-                .setMessage(R.string.confirm_disconnect_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> disconnect() }
-                .setNegativeButton(R.string.confirm_cancel) { _, _ -> listener.onDisconnectCancel() }
-                .create().show()
-        else disconnect()
-    }
-
 }

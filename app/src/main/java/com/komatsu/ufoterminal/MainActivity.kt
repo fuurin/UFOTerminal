@@ -3,12 +3,10 @@ package com.komatsu.ufoterminal
 import android.bluetooth.BluetoothGatt
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
-        BleConnector.BleConnectorListener,
+        UFOConnectionFragment.ConnectionFragmentListener,
         UFOMainFragment.MainFragmentListener,
         UFORecordListFragment.RecordListFragmentListener {
 
@@ -16,43 +14,31 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initFragment()
-        connectionButton.setOnClickListener { connection() }
-        bleConnector = BleConnector(this, this)
-    }
-
-    override fun onStartConnect() {
-        connectionStateText.setText(R.string.connecting)
-        connectionButton.isChecked = true
     }
 
     override fun onConnect(gatt: BluetoothGatt) {
-        connectionStateText.text = getString(R.string.connected)
-        connectionButton.isChecked = true
         recorder = UFORecorder(this, mainFragment)
         controller = UFOController(gatt, recorder)
         replaceFragment(mainFragment)
     }
 
-    override fun onTimeout() {
-        connectionStateText.text = getString(R.string.timeout)
-        connectionButton.isChecked = false
+    override fun onDisconnectConfirm() {
+        controller.pause()
     }
 
     override fun onDisconnectStart() {
-        connectionStateText.text = getString(R.string.disconnected)
-        connectionButton.isChecked = false
         mainFragment.stopAll()
         playerFragment.stopAll()
         initFragment()
     }
 
     override fun onDisconnectCancel() {
-        connectionButton.isChecked = true
         if (mainFragment.isVisible) mainFragment.start()
-        // TODO playerでの一時停止解除処理
+        if (playerFragment.isVisible) playerFragment.start()
     }
 
     override fun onUFOMainFragmentViewCreated() {
+        if (controller == null || recorder == null) "NO controller or recorder!".log()
         mainFragment.ready(controller, recorder)
     }
 
@@ -66,18 +52,16 @@ class MainActivity : AppCompatActivity(),
         replaceFragment(playerFragment)
     }
 
-    private val deviceName = "UFOSA"
     private val fm = supportFragmentManager
     private val mainFragment: UFOMainFragment = UFOMainFragment()
     private val playerFragment: UFOPlayerFragment = UFOPlayerFragment()
 
     // 無駄な !! を防ぐため，「あとで初期化するから待ってて」のlateinitを使用
-    private lateinit var bleConnector: BleConnector
     private lateinit var controller: UFOController
     private lateinit var recorder: UFORecorder
 
     private fun initFragment() {
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        fm.backStackEntryCount.loop { fm.popBackStack() }
         val transaction = fm.beginTransaction()
         transaction.add(R.id.mainScreen, UFOInitialFragment())
         transaction.commit()
@@ -88,14 +72,6 @@ class MainActivity : AppCompatActivity(),
         transaction.replace(R.id.mainScreen, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
-    }
-
-    private fun connection() {
-        if (connectionButton.isChecked) bleConnector.connect(deviceName)
-        else {
-            controller.pause()
-            bleConnector.disconnect(true)
-        }
     }
 }
 

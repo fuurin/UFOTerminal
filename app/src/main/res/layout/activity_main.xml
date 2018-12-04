@@ -7,39 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_weight="1"
+
+    <fragment
+        android:id="@+id/connectionFragment"
+        android:name="com.komatsu.ufoterminal.UFOConnectionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorOnWeak">
-
-        <ImageView
-            android:contentDescription="logo"
-            android:layout_weight="3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/logo"
-            android:id="@+id/logo"/>
-
-        <TextView
-            android:id="@+id/connectionStateText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:gravity="center_vertical|end"
-            android:text="@string/disconnected"
-            android:textColor="@color/colorOnStrong" />
-
-        <ToggleButton
-            android:id="@+id/connectionButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:textOff="@string/connect"
-            android:textOn="@string/disconnect" />
-    </LinearLayout>
+        android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/mainScreen"

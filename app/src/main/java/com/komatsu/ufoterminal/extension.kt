@@ -25,6 +25,11 @@ fun Int.toSecond(): Float {
     return this * (UNIT_PERIOD / 1000)
 }
 
+fun Int.loop(iterFunc: (Int) -> Any) {
+    if (this < 0) return
+    for (i in 0 until this) iterFunc(i)
+}
+
 const val DEFAULT_CREATED_PATTERN: String = "yyyy-MM-dd HH:mm:ss"
 
 fun created(file: File, pattern: String= DEFAULT_CREATED_PATTERN): String {

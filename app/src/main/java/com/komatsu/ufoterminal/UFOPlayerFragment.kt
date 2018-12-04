@@ -20,6 +20,10 @@ class UFOPlayerFragment : Fragment(),
         playerSeekBarListener = UFOPlayerSeekBarListener(player)
     }
 
+    fun start() {
+        if (this::player.isInitialized && playButton.isChecked) player.start()
+    }
+
     fun stopAll() {
         if (this::player.isInitialized) player.end()
     }
