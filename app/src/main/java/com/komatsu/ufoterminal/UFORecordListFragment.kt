@@ -9,7 +9,9 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
+import com.komatsu.ufoterminal.R.id.recordRecyclerView
 import kotlinx.android.synthetic.main.fragment_record_list.*
 import java.io.File
 
@@ -37,7 +39,7 @@ class UFORecordListFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recordRecyclerView.adapter = UFORecordRecyclerAdapter(activity, csvRecords(), this)
+        updateRecordList()
         recordRecyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
@@ -48,13 +50,16 @@ class UFORecordListFragment : Fragment(),
     override fun onRecordRenameStart(fileName: String) {
         val editView = EditText(activity)
         editView.text = SpannableStringBuilder(fileName)
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.record_rename_title)
-                .setMessage(R.string.record_rename_message)
-                .setView(editView)
-                .setPositiveButton(R.string.record_save) { _, _ -> rename(fileName, editView.text.toString()) }
-                .setNeutralButton(R.string.record_cancel) { _, _ -> }
-                .show()
+        val dialogBuilder = AlertDialog.Builder(activity)
+        dialogBuilder
+            .setTitle(R.string.record_rename_title)
+            .setMessage(R.string.record_rename_message)
+            .setView(editView)
+            .setPositiveButton(R.string.record_save) { _, _ -> rename(fileName, editView.text.toString()) }
+            .setNeutralButton(R.string.record_cancel) { _, _ -> }
+        val dialog = dialogBuilder.create()
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
     }
 
     override fun onRecordDeleteStart(fileName: String) {
@@ -74,6 +79,10 @@ class UFORecordListFragment : Fragment(),
         return File(filesDir).listFiles()
                 .filter { it.isFile && it.name.endsWith(".csv") }
                 .map { UFORecordFile(it.name.removeSuffix(".csv"), created(it)) }
+    }
+
+    private fun updateRecordList() {
+        recordRecyclerView.adapter = UFORecordRecyclerAdapter(activity, csvRecords(), this)
     }
 
     private fun rename(oldName: String, newName: String) {

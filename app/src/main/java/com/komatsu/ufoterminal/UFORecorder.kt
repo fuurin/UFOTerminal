@@ -2,7 +2,9 @@ package com.komatsu.ufoterminal
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.view.WindowManager
 import android.widget.EditText
+import java.nio.file.Files.delete
 import java.util.*
 
 class UFORecorder(
@@ -19,7 +21,8 @@ class UFORecorder(
     interface OnRecordTimeChangedListener {
         fun onRecordTimeChanged(time: Float)
         fun onRecordStart()
-        fun onRecordStop()
+        fun onRecordEndCancel()
+        fun onRecordEnd()
     }
 
     fun start(direction: Boolean, power: Int) {
@@ -37,7 +40,7 @@ class UFORecorder(
         stopRecord()
     }
 
-    fun stop() {
+    fun reset() {
         stopRecord()
         initRecorder()
     }
@@ -45,6 +48,7 @@ class UFORecorder(
     fun end() {
         stopRecord()
         isRecording = false
+        listener.onRecordEnd()
         openSaveDialog()
     }
 
@@ -65,22 +69,39 @@ class UFORecorder(
     }
 
     private fun stopRecord() {
+        if (timer == null) return
         timer?.cancel()
         timer = null
-        listener.onRecordStop()
+    }
+
+    private fun endCancel() {
+        isRecording = true
+        listener.onRecordEndCancel()
     }
 
     private fun openSaveDialog() {
         if (record.isEmpty()) return
         val editView = EditText(activity)
-        AlertDialog.Builder(activity)
+        val dialogBuilder = AlertDialog.Builder(activity)
+        dialogBuilder
             .setTitle(R.string.record_save_title)
             .setMessage(R.string.record_save_message)
             .setView(editView)
             .setPositiveButton(R.string.record_save) { _, _ -> save(editView.text.toString()) }
-            .setNegativeButton(R.string.record_abandon) { _, _ -> initRecorder() }
-            .setNeutralButton(R.string.record_cancel) { _, _ -> isRecording = true }
-            .show()
+            .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
+            .setNeutralButton(R.string.record_cancel) { _, _ -> endCancel() }
+        val dialog = dialogBuilder.create()
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+    }
+
+    private fun openRecordAbandonConfirmDialog() {
+        AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_record_abandon_title)
+                .setMessage(R.string.confirm_record_abandon_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> initRecorder() }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> endCancel() }
+                .create().show()
     }
 
     private fun save(filename: String) {

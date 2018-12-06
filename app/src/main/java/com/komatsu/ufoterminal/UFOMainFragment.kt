@@ -37,7 +37,7 @@ class UFOMainFragment : Fragment(),
 
     fun stopAll() {
         controller.stop() // 本当はrecorder.stopでstopできる
-        recorder.stop()
+        recorder.reset()
         initView()
     }
 
@@ -65,7 +65,12 @@ class UFOMainFragment : Fragment(),
         controller.updateRotation(currentPower())
     }
 
-    override fun onRecordStop() {
+    override fun onRecordEndCancel() {
+        recordButton.isChecked = true
+        recordPauseButton.isChecked = true
+    }
+
+    override fun onRecordEnd() {
         controlButton?.isChecked = false // なぜかDisconnect時にnullになる
         controlRandomPowerButton?.isChecked = false
         controller.stop()

@@ -1,9 +1,6 @@
 package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
-import android.support.v7.widget.RecyclerView.EdgeEffectFactory.DIRECTION_LEFT
-import android.support.v7.widget.RecyclerView.EdgeEffectFactory.DIRECTION_RIGHT
-import com.komatsu.ufoterminal.UFOController.Companion.CHANGE_DIR_POSSIBILITY
 import java.util.*
 
 
@@ -17,7 +14,7 @@ class UFOController(
 
     var power = 0
     var direction = true
-    var isActive = false
+    private var isActive = false
 
     private val service = gatt.getService(UUID.fromString(SERVICE_UUID))
     private val characteristic = service.getCharacteristic(UUID.fromString(CHARACTERISTIC_UUID))
@@ -70,15 +67,15 @@ class UFOController(
     fun updateRotation(power: Int, direction: Boolean): Boolean {
         if (!isActive || power > MAX_POWER || power < 0) return false
         if (this.power == power && this.direction == direction) return false
-        return setRotation(power, direction)
+        return forceUpdateRotation(power, direction)
     }
 
-    fun updateRotation(power: Int) {
-        updateRotation(power, direction)
+    fun updateRotation(power: Int): Boolean {
+        return updateRotation(power, direction)
     }
 
-    fun updateRotation(direction: Boolean) {
-        updateRotation(power, direction)
+    fun updateRotation(direction: Boolean): Boolean {
+        return updateRotation(power, direction)
     }
 
     fun start(initPower: Int=power, initDirection: Boolean=direction) {
@@ -87,8 +84,9 @@ class UFOController(
     }
 
     fun pause() {
+        if (!isActive) return // BT切断後pauseが呼ばれると無限ループするので止める．これとstart以外でisActiveはいじらない！
         isActive = false
-        while(!setRotation(0, direction)){} // 0が送れないことがあるので止まるまで止め続ける
+        while(!forceUpdateRotation(0, direction)){} // 0が送れないことがあるので止まるまで止め続ける
     }
 
     fun stop() {
@@ -134,7 +132,7 @@ class UFOController(
         updateRotation(power, DIRECTION_LEFT)
     }
 
-    private fun setRotation(power: Int, direction: Boolean): Boolean {
+    private fun forceUpdateRotation(power: Int, direction: Boolean): Boolean {
         val newPower = power or if (direction == DIRECTION_RIGHT) 0 else ADDITION_TO_REVERSE
         characteristic.value = byteArrayOf(MACHINE_CODE, VORZE_CODE, newPower.toByte())
         if (!gatt.writeCharacteristic(characteristic)) return false

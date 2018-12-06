@@ -88,7 +88,7 @@ class BleConnector(
     private fun startScan() {
         if (isScanning) return
         Log.v("DEBUG", "START SCAN")
-        scanCallback = scanCallbacks()
+        scanCallback = scanCallbacks() // stopするとき同じ参照でないといけないのでcallbackオブジェクトを保持
         bleScanner.startScan(scanCallback)
         isScanning = true
     }
@@ -107,8 +107,6 @@ class BleConnector(
         }
     }
 
-    // start/stopが同じオブジェクトである必要があるため，例外的にvalの形で持つ．
-    // そうしないと無限にscanを続ける．
     private fun scanCallbacks(): ScanCallback {
         return object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {

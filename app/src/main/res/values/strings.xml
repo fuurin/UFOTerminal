@@ -24,8 +24,8 @@
     <string name="record_save">保存</string>
     <string name="record_abandon">破棄</string>
     <string name="record_cancel">キャンセル</string>
-    <string name="confirm_record_cancel_title">記録データ破棄</string>
-    <string name="confirm_record_cancel_message">本当に記録したデータを破棄しますか？</string>
+    <string name="confirm_record_abandon_title">記録データ破棄</string>
+    <string name="confirm_record_abandon_message">本当に記録したデータを破棄しますか？</string>
     <string name="control_header">操作</string>
     <string name="control_start">スタート</string>
     <string name="control_stop">ストップ</string>

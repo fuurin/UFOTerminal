@@ -22,6 +22,7 @@ class UFOPlayerFragment : Fragment(),
         file = CSVFile(activity.filesDir.path, fileName)
         player = UFOPlayer(file, controller, this)
         playerSeekBarListener = UFOPlayerSeekBarListener(player)
+        controller.start(50)
     }
 
     fun start() {
@@ -52,7 +53,7 @@ class UFOPlayerFragment : Fragment(),
 
     override fun onDetach() {
         super.onDetach()
-        player.end()
+        if (this::player.isInitialized) player.end()
     }
 
     private fun initView() {

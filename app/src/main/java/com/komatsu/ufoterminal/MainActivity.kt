@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initFragment()
+        initScreen()
     }
 
     override fun onConnect(gatt: BluetoothGatt) {
@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onDisconnectStart() {
-        mainFragment.stopAll()
-        playerFragment.stopAll()
-        initFragment()
+        if (mainFragment.isVisible) mainFragment.stopAll()
+        if (playerFragment.isVisible) playerFragment.stopAll()
+        initScreen()
     }
 
     override fun onDisconnectCancel() {
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(),
         replaceFragment(playerFragment)
     }
 
-    private fun initFragment() {
+    private fun initScreen() {
         fm.backStackEntryCount.loop { fm.popBackStack() }
         val transaction = fm.beginTransaction()
         transaction.add(R.id.mainScreen, UFOInitialFragment())

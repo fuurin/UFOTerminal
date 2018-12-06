@@ -52,6 +52,12 @@ class UFOPlayer(
         updatePlayTime(time - minus.toUnitPeriods())
     }
 
+    private fun stopPlay() {
+        if (timer == null) return // ?.演算子が効かないのでnullチェック
+        timer?.cancel()
+        timer = null
+    }
+
     private fun playTask(): TimerTask {
         return object : TimerTask() {
             override fun run() {
@@ -79,10 +85,5 @@ class UFOPlayer(
                 listener?.onPlayFinished()
             }
         }
-    }
-
-    private fun stopPlay() {
-        timer?.cancel()
-        timer = null
     }
 }

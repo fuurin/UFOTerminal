@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,7 @@ class UFOConnectionFragment : Fragment(),
 
     override fun onConnect(gatt: BluetoothGatt) {
         connectionStateText.text = getString(R.string.connected)
+        Handler().run { connectionButton.isEnabled = true }
         connectionButton.isChecked = true
         listener.onConnect(gatt)
     }
@@ -64,7 +66,12 @@ class UFOConnectionFragment : Fragment(),
     }
 
     private fun connection(checked: Boolean) {
-        if (checked) connector.connect() else disconnect()
+        if (checked) connect() else disconnect()
+    }
+
+    private fun connect() {
+        connectionButton.isEnabled = false
+        connector.connect()
     }
 
     private fun disconnect(confirm: Boolean = true) {
@@ -86,7 +93,7 @@ class UFOConnectionFragment : Fragment(),
     }
 
     private fun disconnectStart() {
-        listener.onDisconnectStart()
+        listener.onDisconnectStart() // connector.disconnectよりも先に実行すること！
         connectionStateText.text = getString(R.string.disconnected)
         connectionButton.isChecked = false
         connector.disconnect()
