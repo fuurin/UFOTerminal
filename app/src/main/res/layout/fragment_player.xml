@@ -55,7 +55,7 @@
         android:id="@+id/playButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5"
+        android:layout_weight="2"
         android:layout_marginVertical="5dp"
         android:textOff="@string/play_start"
         android:textOn="@string/play_pause" />
@@ -88,9 +88,9 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="2"
         android:layout_margin="5dp">
 
         <Button
@@ -121,5 +121,13 @@
             android:layout_weight="1"
             android:text="@string/play_forward_10" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/sendRecordButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_margin="5dp"
+        android:text="@string/play_send_record"/>
 
 </LinearLayout>

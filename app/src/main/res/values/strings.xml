@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UFOTerminal</string>
-    <string name="not_connected">接続ボタンを押して，お手持ちのUFOSAにBluetooth接続してください．</string>
+    <string name="not_connected">使い方\n\nUFOSAの電源を入れる\n↓\n接続ボタンを押す\n↓\n接続完了\n↓\nUFOSAを自由に操作‼</string>
     <string name="connect">接続</string>
     <string name="disconnect">切断</string>
     <string name="connecting">接続中です…</string>
@@ -49,6 +49,11 @@
     <string name="play_forward_1">1.0→</string>
     <string name="play_forward_5">5.0→</string>
     <string name="play_forward_10">10.0→</string>
+    <string name="play_send_record">記録をメールで送信</string>
+    <string name="play_send_record_address">送信先メールアドレス</string>
+    <string name="play_send_record_ok">送信</string>
+    <string name="play_send_record_cancel">キャンセル</string>
+    <string name="play_send_record_title">UFOSAのCSVファイル</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

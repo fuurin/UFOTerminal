@@ -2,13 +2,17 @@ package com.komatsu.ufoterminal
 
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.fragment_player.*
+import java.net.Inet4Address
 
 
 class UFOPlayerFragment : Fragment(),
@@ -45,6 +49,7 @@ class UFOPlayerFragment : Fragment(),
 
     override fun onUpdateTime(time: Float) {
         playTimeText.text = time.timeFormat()
+        playTimeSeekBar.progress = time.toUnitPeriods()
     }
 
     override fun onPlayFinished() {
@@ -71,9 +76,32 @@ class UFOPlayerFragment : Fragment(),
         forward1Button.setOnClickListener { player.forward(1.0f) }
         forward5Button.setOnClickListener { player.forward(5.0f) }
         forward10Button.setOnClickListener { player.forward(10.0f) }
+        sendRecordButton.setOnClickListener { openSendingRecordDialog() }
     }
 
     private fun playing(checked: Boolean) {
         player.apply { if (checked) start() else pause() }
+    }
+
+    private fun openSendingRecordDialog() {
+        player.pause()
+        val editView = EditText(activity)
+        val dialogBuilder = AlertDialog.Builder(activity)
+        dialogBuilder
+                .setTitle(R.string.play_send_record)
+                .setMessage(R.string.play_send_record_address)
+                .setView(editView)
+                .setPositiveButton(R.string.play_send_record_ok) { _, _ -> sendRecord(editView.text.toString()) }
+                .setNeutralButton(R.string.play_send_record_cancel) { _, _ -> }
+        val dialog = dialogBuilder.create()
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+    }
+
+    private fun sendRecord(address: String) {
+        val emailSenderBuilder = EmailSenderBuilder()
+        emailSenderBuilder
+                .setAddress(address)
+                .setTitle()
     }
 }

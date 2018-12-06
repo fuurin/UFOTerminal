@@ -30,6 +30,7 @@ class UFOPlayer(
     }
 
     fun start() {
+        controller.start()
         timer = Timer()
         timer!!.scheduleAtFixedRate(playTask(), 0, UNIT_PERIOD.toLong())
     }
