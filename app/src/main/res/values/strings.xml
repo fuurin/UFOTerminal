@@ -53,7 +53,9 @@
     <string name="play_send_record_address">送信先メールアドレス</string>
     <string name="play_send_record_ok">送信</string>
     <string name="play_send_record_cancel">キャンセル</string>
-    <string name="play_send_record_title">UFOSAのCSVファイル</string>
+    <string name="play_send_record_title">UFOSAの記録ファイル</string>
+    <string name="play_send_record_success">記録ファイルを送信しました</string>
+    <string name="play_send_record_failed">記録ファイルの送信に失敗しました</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

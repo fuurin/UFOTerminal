@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Toast
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.fragment_player.*
 import java.net.Inet4Address
@@ -99,9 +100,16 @@ class UFOPlayerFragment : Fragment(),
     }
 
     private fun sendRecord(address: String) {
-        val emailSenderBuilder = EmailSenderBuilder()
-        emailSenderBuilder
+        val sendResult = EmailSenderBuilder()
                 .setAddress(address)
-                .setTitle()
+                .setTitle(resources.getString(R.string.play_send_record_title))
+                .setAttachment(file.file)
+                .send()
+        showSendRecordResult(sendResult)
+    }
+
+    private fun showSendRecordResult(result: Boolean) {
+        val textSrc = if(result) R.string.play_send_record_success else R.string.play_send_record_failed
+        Toast.makeText(context , resources.getString(textSrc), Toast.LENGTH_LONG).show();
     }
 }
