@@ -13,7 +13,8 @@ import android.widget.EditText
 import android.widget.Toast
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.fragment_player.*
-import java.net.Inet4Address
+import android.content.Intent
+import android.net.Uri
 
 
 class UFOPlayerFragment : Fragment(),
@@ -77,39 +78,22 @@ class UFOPlayerFragment : Fragment(),
         forward1Button.setOnClickListener { player.forward(1.0f) }
         forward5Button.setOnClickListener { player.forward(5.0f) }
         forward10Button.setOnClickListener { player.forward(10.0f) }
-        sendRecordButton.setOnClickListener { openSendingRecordDialog() }
+        sendRecordButton.setOnClickListener { openMailer() }
     }
 
     private fun playing(checked: Boolean) {
         player.apply { if (checked) start() else pause() }
     }
 
-    private fun openSendingRecordDialog() {
-        player.pause()
-        val editView = EditText(activity)
-        val dialogBuilder = AlertDialog.Builder(activity)
-        dialogBuilder
-                .setTitle(R.string.play_send_record)
-                .setMessage(R.string.play_send_record_address)
-                .setView(editView)
-                .setPositiveButton(R.string.play_send_record_ok) { _, _ -> sendRecord(editView.text.toString()) }
-                .setNeutralButton(R.string.play_send_record_cancel) { _, _ -> }
-        val dialog = dialogBuilder.create()
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-    }
+    private fun openMailer() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SENDTO
 
-    private fun sendRecord(address: String) {
-        val sendResult = EmailSenderBuilder()
-                .setAddress(address)
-                .setTitle(resources.getString(R.string.play_send_record_title))
-                .setAttachment(file.file)
-                .send()
-        showSendRecordResult(sendResult)
-    }
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.play_send_record_title))
+        intent.putExtra(Intent.EXTRA_TEXT, file.title)
+        intent.putExtra(Intent.EXTRA_STREAM, file.file.toURI())
 
-    private fun showSendRecordResult(result: Boolean) {
-        val textSrc = if(result) R.string.play_send_record_success else R.string.play_send_record_failed
-        Toast.makeText(context , resources.getString(textSrc), Toast.LENGTH_LONG).show();
+        startActivity(Intent.createChooser(intent, null))
     }
 }
