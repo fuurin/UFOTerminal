@@ -88,9 +88,11 @@ class UFORecordListFragment : Fragment(),
     private fun rename(oldName: String, newName: String) {
         if (oldName === newName) return
         csvFile(oldName).renameTo(csvFile(newName))
+        updateRecordList()
     }
 
     private fun delete(fileName: String) {
         csvFile(fileName).delete()
+        updateRecordList()
     }
 }

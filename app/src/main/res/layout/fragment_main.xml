@@ -115,7 +115,6 @@
             android:backgroundTint="@color/colorPrimary"
             android:indeterminate="false"
             android:max="100"
-            android:paddingTop="23dp"
             android:splitTrack="false"
             android:textAlignment="center" />
 

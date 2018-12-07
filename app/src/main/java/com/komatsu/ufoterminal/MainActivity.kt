@@ -11,8 +11,8 @@ class MainActivity : AppCompatActivity(),
         UFORecordListFragment.RecordListFragmentListener {
 
     private val fm = supportFragmentManager
-    private val mainFragment: UFOMainFragment = UFOMainFragment()
-    private val playerFragment: UFOPlayerFragment = UFOPlayerFragment()
+    private var mainFragment: UFOMainFragment = UFOMainFragment()
+    private var playerFragment: UFOPlayerFragment = UFOPlayerFragment()
 
     // 無駄な !! を防ぐため，「あとで初期化するから待ってて」のlateinitを使用
     private lateinit var controller: UFOController
@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onConnect(gatt: BluetoothGatt) {
+        mainFragment = UFOMainFragment()
         recorder = UFORecorder(this, mainFragment)
         controller = UFOController(gatt, recorder)
         replaceFragment(mainFragment)
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOpenPlayer(fileName: String) {
+        playerFragment = UFOPlayerFragment() // どう頑張っても再生ボタンとシークバーが初期化されないのでフラグメントごと作り直すことにした
         playerFragment.initPlayer(this, fileName, controller)
         replaceFragment(playerFragment)
     }

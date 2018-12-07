@@ -2,19 +2,16 @@ package com.komatsu.ufoterminal
 
 
 import android.app.Activity
-import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.Toast
 import android.widget.ToggleButton
+import com.komatsu.ufoterminal.R.id.forward10Button
 import kotlinx.android.synthetic.main.fragment_player.*
-import android.content.Intent
-import android.net.Uri
 
 
 class UFOPlayerFragment : Fragment(),
@@ -28,7 +25,6 @@ class UFOPlayerFragment : Fragment(),
         file = CSVFile(activity.filesDir.path, fileName)
         player = UFOPlayer(file, controller, this)
         playerSeekBarListener = UFOPlayerSeekBarListener(player)
-        controller.start(50)
     }
 
     fun start() {
@@ -49,6 +45,11 @@ class UFOPlayerFragment : Fragment(),
         attachEvents()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (this::player.isInitialized) player.end()
+    }
+
     override fun onUpdateTime(time: Float) {
         playTimeText.text = time.timeFormat()
         playTimeSeekBar.progress = time.toUnitPeriods()
@@ -56,11 +57,6 @@ class UFOPlayerFragment : Fragment(),
 
     override fun onPlayFinished() {
         playButton.isChecked = false
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        if (this::player.isInitialized) player.end()
     }
 
     private fun initView() {
@@ -82,18 +78,23 @@ class UFOPlayerFragment : Fragment(),
     }
 
     private fun playing(checked: Boolean) {
-        player.apply { if (checked) start() else pause() }
+        player.apply {
+            if (checked) {
+                if (playTimeSeekBar.progress == playTimeSeekBar.max) end()
+                start()
+            } else pause()
+        }
     }
 
     private fun openMailer() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SENDTO
-
+        // 参考： http://kit-lab.hatenablog.jp/entry/2017/01/08/011428
+        val uri = FileProvider.getUriForFile(activity!!, "${activity!!.applicationContext.packageName}.provider", file.file)
+        val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.play_send_record_title))
         intent.putExtra(Intent.EXTRA_TEXT, file.title)
-        intent.putExtra(Intent.EXTRA_STREAM, file.file.toURI())
-
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivity(Intent.createChooser(intent, null))
     }
 }

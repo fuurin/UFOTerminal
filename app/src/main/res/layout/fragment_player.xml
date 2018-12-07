@@ -54,8 +54,7 @@
     <ToggleButton
         android:id="@+id/playButton"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="64dp"
         android:layout_marginVertical="5dp"
         android:textOff="@string/play_start"
         android:textOn="@string/play_pause" />
@@ -63,9 +62,8 @@
     <TextView
         android:id="@+id/playTimeText"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="48dp"
         android:layout_margin="5dp"
-        android:layout_weight="1.5"
         android:background="@drawable/text_frame"
         android:gravity="center_vertical|end"
         android:paddingLeft="20dp"
@@ -77,20 +75,17 @@
     <SeekBar
         android:id="@+id/playTimeSeekBar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="48dp"
         android:layout_margin="5dp"
         android:backgroundTint="@color/colorPrimary"
         android:indeterminate="false"
-        android:paddingTop="23dp"
         android:splitTrack="false"
         android:textAlignment="center" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="64dp"
         android:layout_margin="5dp">
 
         <Button
@@ -120,13 +115,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/play_forward_10" />
+
     </LinearLayout>
 
     <Button
         android:id="@+id/sendRecordButton"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="64dp"
         android:layout_margin="5dp"
         android:text="@string/play_send_record"/>
 

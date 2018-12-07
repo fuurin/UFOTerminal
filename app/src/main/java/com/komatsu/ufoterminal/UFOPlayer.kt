@@ -1,5 +1,6 @@
 package com.komatsu.ufoterminal
 
+import java.lang.Exception
 import java.util.*
 
 class UFOPlayer(
@@ -27,6 +28,7 @@ class UFOPlayer(
         this.time = time
         currentRecord = record.find { time <= it.time } ?: record.last()
         currentId = record.indexOf(currentRecord)
+        listener?.onUpdateTime(time.toSecond())
     }
 
     fun start() {
@@ -66,12 +68,13 @@ class UFOPlayer(
 
                 if (time == currentRecord.time) {
                     controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)
-                    currentId++
-                    currentRecord = record[currentId]
-                }
 
-                if (currentId + 1 == record.size) {
-                    Timer().schedule(playFinishTask(), 1000)
+                    if (++currentId >= record.size) {
+                        stopPlay()
+                        Timer().schedule(playFinishTask(), 1000)
+                    } else {
+                        currentRecord = record[currentId]
+                    }
                 }
 
                 listener?.onUpdateTime(time.toSecond())

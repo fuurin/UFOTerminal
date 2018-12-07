@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.view.WindowManager
 import android.widget.EditText
+import java.io.File
 import java.nio.file.Files.delete
 import java.util.*
 
@@ -87,7 +88,7 @@ class UFORecorder(
             .setTitle(R.string.record_save_title)
             .setMessage(R.string.record_save_message)
             .setView(editView)
-            .setPositiveButton(R.string.record_save) { _, _ -> save(editView.text.toString()) }
+            .setPositiveButton(R.string.record_save) { _, _ -> checkOverwrite(editView.text.toString()) }
             .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
             .setNeutralButton(R.string.record_cancel) { _, _ -> endCancel() }
         val dialog = dialogBuilder.create()
@@ -102,6 +103,23 @@ class UFORecorder(
                 .setPositiveButton(R.string.confirm_ok) { _, _ -> initRecorder() }
                 .setNegativeButton(R.string.confirm_cancel) { _, _ -> endCancel() }
                 .create().show()
+    }
+
+    private fun openOverwriteConfirmDialog(filename: String) {
+        AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_record_overwrite_title)
+                .setMessage(R.string.confirm_record_overwrite_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> save(filename) }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> endCancel() }
+                .create().show()
+    }
+
+    private fun checkOverwrite(filename: String) {
+        if (File("${activity.filesDir}/$filename.csv").isFile) {
+            openOverwriteConfirmDialog(filename)
+        } else {
+            save(filename)
+        }
     }
 
     private fun save(filename: String) {

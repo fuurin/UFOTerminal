@@ -62,6 +62,7 @@ class UFOConnectionFragment : Fragment(),
 
     override fun onTimeout() {
         connectionStateText.text = getString(R.string.timeout)
+        connectionButton.isEnabled = true
         connectionButton.isChecked = false
     }
 
