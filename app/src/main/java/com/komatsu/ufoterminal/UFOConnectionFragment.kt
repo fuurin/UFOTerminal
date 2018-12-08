@@ -35,7 +35,10 @@ class UFOConnectionFragment : Fragment(),
 
     fun confirmBleDisable() {
         connector.disconnect()
-        if (!connector.bleIsEnabled()) return
+        if (!connector.bleIsEnabled()) {
+            listener.onConfirmBleDisableFinished()
+            return
+        }
         AlertDialog.Builder(context)
                 .setTitle(R.string.confirm_ble_off_title)
                 .setMessage(R.string.confirm_ble_off_message)
