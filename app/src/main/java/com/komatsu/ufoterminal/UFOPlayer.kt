@@ -1,6 +1,5 @@
 package com.komatsu.ufoterminal
 
-import java.lang.Exception
 import java.util.*
 
 class UFOPlayer(
@@ -8,7 +7,7 @@ class UFOPlayer(
         private val controller: UFOController,
         private val listener: PlayerListener?) {
 
-    val record = file.read {
+    val record = file.readAll {
         UFORecord(
                 it[0].toInt(), it[1] === "0", it[2].toByte()
         )
@@ -20,7 +19,7 @@ class UFOPlayer(
     private var timer: Timer? = null
 
     interface PlayerListener {
-        fun onUpdateTime(time: Float)
+        fun onUpdateTime(time: Int)
         fun onPlayFinished()
     }
 
@@ -28,7 +27,7 @@ class UFOPlayer(
         this.time = time
         currentRecord = record.find { time <= it.time } ?: record.last()
         currentId = record.indexOf(currentRecord)
-        listener?.onUpdateTime(time.toSecond())
+        listener?.onUpdateTime(time)
     }
 
     fun start() {
@@ -47,12 +46,12 @@ class UFOPlayer(
         updatePlayTime(0)
     }
 
-    fun forward(plus: Float) {
-        updatePlayTime(time + plus.toUnitPeriods())
+    fun forward(plus: Int) {
+        updatePlayTime(time + plus)
     }
 
-    fun backward(minus: Float) {
-        updatePlayTime(time - minus.toUnitPeriods())
+    fun backward(minus: Int) {
+        updatePlayTime(time - minus)
     }
 
     private fun stopPlay() {
@@ -77,7 +76,7 @@ class UFOPlayer(
                     }
                 }
 
-                listener?.onUpdateTime(time.toSecond())
+                listener?.onUpdateTime(time)
             }
         }
     }

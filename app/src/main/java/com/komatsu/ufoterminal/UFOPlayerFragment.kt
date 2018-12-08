@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ToggleButton
-import com.komatsu.ufoterminal.R.id.forward10Button
 import kotlinx.android.synthetic.main.fragment_player.*
 
 
@@ -20,6 +19,7 @@ class UFOPlayerFragment : Fragment(),
     private lateinit var file: CSVFile
     private lateinit var player: UFOPlayer
     private lateinit var playerSeekBarListener: UFOPlayerSeekBarListener
+
 
     fun initPlayer(activity: Activity, fileName: String, controller: UFOController) {
         file = CSVFile(activity.filesDir.path, fileName)
@@ -50,9 +50,9 @@ class UFOPlayerFragment : Fragment(),
         if (this::player.isInitialized) player.end()
     }
 
-    override fun onUpdateTime(time: Float) {
-        playTimeText.text = time.timeFormat()
-        playTimeSeekBar.progress = time.toUnitPeriods()
+    override fun onUpdateTime(time: Int) {
+        playTimeText.text = time.recordTimeFormat()
+        playTimeSeekBar.progress = time
     }
 
     override fun onPlayFinished() {
@@ -61,19 +61,20 @@ class UFOPlayerFragment : Fragment(),
 
     private fun initView() {
         playCreatedTime.text = file.created
+        playLength.text = player.record.last().time.recordTimeFormat()
         playTitleText.text = file.title
         playButton.isChecked = false
-        playTimeText.text = 0f.timeFormat()
+        playTimeText.text = 0.recordTimeFormat()
         playTimeSeekBar.max = player.record.last().time
     }
 
     private fun attachEvents() {
         playButton.setOnClickListener { playing((it as ToggleButton).isChecked) }
         playTimeSeekBar.setOnSeekBarChangeListener(playerSeekBarListener)
-        back1Button.setOnClickListener { player.backward(1.0f) }
-        forward1Button.setOnClickListener { player.forward(1.0f) }
-        forward5Button.setOnClickListener { player.forward(5.0f) }
-        forward10Button.setOnClickListener { player.forward(10.0f) }
+        back1Button.setOnClickListener { player.backward(10) }
+        forward1Button.setOnClickListener { player.forward(10) }
+        forward5Button.setOnClickListener { player.forward(50) }
+        forward10Button.setOnClickListener { player.forward(100) }
         sendRecordButton.setOnClickListener { openMailer() }
     }
 

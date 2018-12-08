@@ -14,6 +14,7 @@ class UFORecordRecyclerAdapter(
         private val listener: OnRecyclerListener
 ) : RecyclerView.Adapter<UFORecordRecyclerAdapter.ViewHolder>() {
 
+
     interface OnRecyclerListener {
         fun onRecordSelected(fileName: String)
         fun onRecordRenameStart(fileName: String)
@@ -21,7 +22,7 @@ class UFORecordRecyclerAdapter(
     }
 
     class ViewHolder(
-        itemView: View
+            itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         val titleView: TextView = itemView.recordTitle
         val timeView: TextView = itemView.recordTime

@@ -57,8 +57,8 @@ class UFOMainFragment : Fragment(),
         listener.onUFOMainFragmentViewCreated()
     }
 
-    override fun onRecordTimeChanged(time: Float) {
-        recordTimeText.text = time.timeFormat()
+    override fun onRecordTimeChanged(time: Int) {
+        recordTimeText.text = time.recordTimeFormat()
     }
 
     override fun onRecordStart() {
@@ -79,7 +79,7 @@ class UFOMainFragment : Fragment(),
     private fun initView() {
         recordButton.isChecked = false
         recordPauseButton.isChecked = false
-        recordTimeText.text = 0.0f.timeFormat()
+        recordTimeText.text = 0.recordTimeFormat()
         controlButton.isChecked = true
         controlRandomPowerButton.isChecked = false
         controlPowerSeekBar.progress = 0

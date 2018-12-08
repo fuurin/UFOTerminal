@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_connection.*
 
 
 class UFOConnectionFragment : Fragment(),
-        BleConnector.BleConnectorListener{
+        BleConnector.BleConnectorListener {
 
     private lateinit var listener: ConnectionFragmentListener
     private lateinit var connector: BleConnector
@@ -42,9 +42,21 @@ class UFOConnectionFragment : Fragment(),
         listener = context
     }
 
+    override fun onStop() {
+        super.onStop()
+        connector.disconnect()
+        if (!connector.bleIsEnabled()) return
+        AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_ble_off_title)
+                .setMessage(R.string.confirm_ble_off_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> connector.disableBle() }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
+                .create().show()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        connector = BleConnector(activity?: return, DEVISE_NAME, this)
+        connector = BleConnector(activity ?: return, DEVISE_NAME, this)
         connectionButton.setOnClickListener { connection((it as ToggleButton).isChecked) }
     }
 

@@ -1,6 +1,8 @@
 package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         initScreen()
     }
+
+
 
     override fun onConnect(gatt: BluetoothGatt) {
         mainFragment = UFOMainFragment()
@@ -47,7 +51,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onUFOMainFragmentViewCreated() {
-        if (controller == null || recorder == null) "NO controller or recorder!".log()
         mainFragment.ready(controller, recorder)
     }
 

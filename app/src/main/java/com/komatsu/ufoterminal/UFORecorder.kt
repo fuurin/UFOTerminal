@@ -20,7 +20,7 @@ class UFORecorder(
     private var record: MutableList<UFORecord> = mutableListOf()
 
     interface OnRecordTimeChangedListener {
-        fun onRecordTimeChanged(time: Float)
+        fun onRecordTimeChanged(time: Int)
         fun onRecordStart()
         fun onRecordEndCancel()
         fun onRecordEnd()
@@ -66,7 +66,7 @@ class UFORecorder(
     }
 
     private fun updateRecordTime() {
-        listener.onRecordTimeChanged(time.toSecond())
+        listener.onRecordTimeChanged(time)
     }
 
     private fun stopRecord() {
@@ -87,7 +87,7 @@ class UFORecorder(
         dialogBuilder
             .setTitle(R.string.record_save_title)
             .setMessage(R.string.record_save_message)
-            .setView(editView)
+            .setView(editView.withMarginLayout())
             .setPositiveButton(R.string.record_save) { _, _ -> checkOverwrite(editView.text.toString()) }
             .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
             .setNeutralButton(R.string.record_cancel) { _, _ -> endCancel() }
@@ -124,7 +124,7 @@ class UFORecorder(
 
     private fun save(filename: String) {
         if (record.isEmpty() || filename == "") return
-        val strRecord: List<List<String>> = record.map {
+        var strRecord: List<List<String>> = record.map {
             listOf(
                 it.time.toString(),
                 if (it.direction) "0" else "1",

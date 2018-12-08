@@ -5,15 +5,22 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.system.Os.rename
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import com.komatsu.ufoterminal.R.id.recordRecyclerView
 import kotlinx.android.synthetic.main.fragment_record_list.*
 import java.io.File
+import java.nio.file.Files.delete
+import android.text.InputType
+
+
 
 class UFORecordListFragment : Fragment(),
         UFORecordRecyclerAdapter.OnRecyclerListener {
@@ -54,7 +61,7 @@ class UFORecordListFragment : Fragment(),
         dialogBuilder
             .setTitle(R.string.record_rename_title)
             .setMessage(R.string.record_rename_message)
-            .setView(editView)
+            .setView(editView.withMarginLayout())
             .setPositiveButton(R.string.record_save) { _, _ -> rename(fileName, editView.text.toString()) }
             .setNeutralButton(R.string.record_cancel) { _, _ -> }
         val dialog = dialogBuilder.create()
@@ -78,7 +85,7 @@ class UFORecordListFragment : Fragment(),
     private fun csvRecords(): List<UFORecordFile> {
         return File(filesDir).listFiles()
                 .filter { it.isFile && it.name.endsWith(".csv") }
-                .map { UFORecordFile(it.name.removeSuffix(".csv"), created(it)) }
+                .map { UFORecordFile(it.name.removeSuffix(".csv"), it.created()) }
     }
 
     private fun updateRecordList() {

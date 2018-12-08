@@ -9,6 +9,8 @@
     <string name="timeout">タイムアウトしました</string>
     <string name="confirm_disconnect_title">通信切断</string>
     <string name="confirm_disconnect_message">本当に通信を切断しますか？</string>
+    <string name="confirm_ble_off_title">Bluetoothオフ</string>
+    <string name="confirm_ble_off_message">Bluetoothをオフにしますか？</string>
     <string name="confirm_ok">はい</string>
     <string name="confirm_cancel">いいえ</string>
     <string name="record_header">記録</string>
@@ -36,6 +38,7 @@
     <string name="control_random">ランダム回転</string>
     <string name="record_list_header">記録リスト</string>
     <string name="record_time">作成日時： </string>
+    <string name="record_length">再生時間： </string>
     <string name="record_rename">名前</string>
     <string name="record_delete">削除</string>
     <string name="record_rename_title">操作記録の名前変更</string>

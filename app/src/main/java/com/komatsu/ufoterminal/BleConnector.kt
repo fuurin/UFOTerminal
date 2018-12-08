@@ -57,15 +57,19 @@ class BleConnector(
         }
     }
 
+    fun bleIsEnabled(): Boolean {
+        return btAdapter.isEnabled
+    }
+
+    fun disableBle() {
+        if (bleIsEnabled()) btAdapter.disable()
+    }
+
     private fun forceActiveDevice() {
         if (forceActiveDevice) {
             forceLocationSourceOn()
             forceBluetoothOn()
         }
-    }
-
-    private fun bleIsEnabled(): Boolean {
-        return btAdapter.isEnabled
     }
 
     private fun forceBluetoothOn() {

@@ -8,7 +8,7 @@ import java.io.IOException
 class CSVFile(filesDir: String, val title: String) {
 
     val file = File("$filesDir/$title.csv")
-    val created = created(file)
+    val created = file.created()
 
     fun appendLine(data: List<String>): Boolean {
         file.appendText(data.joinToString(",") + "\n")
@@ -26,14 +26,25 @@ class CSVFile(filesDir: String, val title: String) {
         return true
     }
 
-    fun read(adapt: (List<String>) -> Any): List<Any> {
+    fun readLines(line: Int, adapt: (List<String>) -> Any): List<Any> {
+        val data = mutableListOf<Any>()
+        if (!file.canRead()) return data
+        var counter = 0
+        file.forEachLine {
+            data.add(adapt(it.split(",")))
+            if (++counter >= line) return@forEachLine
+        }
+        return data.toList()
+    }
+
+    fun readAll(adapt: (List<String>) -> Any): List<Any> {
         val data = mutableListOf<Any>()
         if (!file.canRead()) return data
         file.forEachLine { data.add(adapt(it.split(","))) }
         return data.toList()
     }
 
-    fun read(): List<List<String>> {
-        return read { it } as List<List<String>>
+    fun readAll(): List<List<String>> {
+        return readAll { it } as List<List<String>>
     }
 }
