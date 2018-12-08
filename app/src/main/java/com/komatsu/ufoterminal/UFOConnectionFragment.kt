@@ -1,11 +1,13 @@
 package com.komatsu.ufoterminal
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,21 @@ class UFOConnectionFragment : Fragment(),
         fun onDisconnectConfirm()
         fun onDisconnectStart()
         fun onDisconnectCancel()
+        fun onConfirmBleDisableFinished()
+    }
+
+    fun confirmBleDisable() {
+        connector.disconnect()
+        if (!connector.bleIsEnabled()) return
+        AlertDialog.Builder(context)
+                .setTitle(R.string.confirm_ble_off_title)
+                .setMessage(R.string.confirm_ble_off_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ ->
+                    connector.disableBle()
+                    listener.onConfirmBleDisableFinished()
+                }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> listener.onConfirmBleDisableFinished()}
+                .create().show()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,18 +57,6 @@ class UFOConnectionFragment : Fragment(),
             throw RuntimeException("$context must implement ConnectionFragmentListener")
         super.onAttach(context)
         listener = context
-    }
-
-    override fun onStop() {
-        super.onStop()
-        connector.disconnect()
-        if (!connector.bleIsEnabled()) return
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.confirm_ble_off_title)
-                .setMessage(R.string.confirm_ble_off_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> connector.disableBle() }
-                .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
-                .create().show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

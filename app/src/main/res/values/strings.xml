@@ -9,7 +9,7 @@
     <string name="timeout">タイムアウトしました</string>
     <string name="confirm_disconnect_title">通信切断</string>
     <string name="confirm_disconnect_message">本当に通信を切断しますか？</string>
-    <string name="confirm_ble_off_title">Bluetoothオフ</string>
+    <string name="confirm_ble_off_title">アプリ終了</string>
     <string name="confirm_ble_off_message">Bluetoothをオフにしますか？</string>
     <string name="confirm_ok">はい</string>
     <string name="confirm_cancel">いいえ</string>

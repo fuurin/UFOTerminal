@@ -16,7 +16,7 @@ class BleConnector(
         private val activity: Activity,
         private val deviceName: String,
         private val listener: BleConnectorListener,
-        var scanTimeOutPeriod: Long = 10000,
+        private var scanTimeOutPeriod: Long = 10000,
         private val forceActiveDevice: Boolean = true
 ) {
 

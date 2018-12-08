@@ -7,20 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <fragment
-        android:id="@+id/connectionFragment"
-        android:name="com.komatsu.ufoterminal.UFOConnectionFragment"
+    <FrameLayout
+        android:id="@+id/connectionScreen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/mainScreen"
-        android:layout_weight="10"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
-
-    </FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="10"/>
 
 </LinearLayout>

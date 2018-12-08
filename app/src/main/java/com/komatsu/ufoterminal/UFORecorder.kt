@@ -81,7 +81,11 @@ class UFORecorder(
     }
 
     private fun openSaveDialog() {
-        if (record.isEmpty()) return
+        if (record.size <= 1) {
+            initRecorder()
+            listener.onRecordEnd()
+            return
+        }
         val editView = EditText(activity)
         val dialogBuilder = AlertDialog.Builder(activity)
         dialogBuilder
@@ -124,7 +128,7 @@ class UFORecorder(
 
     private fun save(filename: String) {
         if (record.isEmpty() || filename == "") return
-        var strRecord: List<List<String>> = record.map {
+        val strRecord: List<List<String>> = record.map {
             listOf(
                 it.time.toString(),
                 if (it.direction) "0" else "1",

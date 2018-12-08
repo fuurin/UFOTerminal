@@ -1,11 +1,10 @@
 package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothManager
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.view.KeyEvent
 
 class MainActivity : AppCompatActivity(),
         UFOConnectionFragment.ConnectionFragmentListener,
@@ -13,6 +12,7 @@ class MainActivity : AppCompatActivity(),
         UFORecordListFragment.RecordListFragmentListener {
 
     private val fm = supportFragmentManager
+    private var connectionFragment = UFOConnectionFragment()
     private var mainFragment: UFOMainFragment = UFOMainFragment()
     private var playerFragment: UFOPlayerFragment = UFOPlayerFragment()
 
@@ -23,10 +23,9 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setConnectionFragment()
         initScreen()
     }
-
-
 
     override fun onConnect(gatt: BluetoothGatt) {
         mainFragment = UFOMainFragment()
@@ -63,6 +62,25 @@ class MainActivity : AppCompatActivity(),
         playerFragment = UFOPlayerFragment() // どう頑張っても再生ボタンとシークバーが初期化されないのでフラグメントごと作り直すことにした
         playerFragment.initPlayer(this, fileName, controller)
         replaceFragment(playerFragment)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode != KeyEvent.KEYCODE_BACK) {
+            return super.onKeyDown(keyCode, event)
+        } else {
+            if (fm.backStackEntryCount <= 1) connectionFragment.confirmBleDisable()
+            return false
+        }
+    }
+
+    override fun onConfirmBleDisableFinished() {
+        finish()
+    }
+
+    private fun setConnectionFragment() {
+        val transaction = fm.beginTransaction()
+        transaction.add(R.id.connectionScreen, connectionFragment)
+        transaction.commit()
     }
 
     private fun initScreen() {
