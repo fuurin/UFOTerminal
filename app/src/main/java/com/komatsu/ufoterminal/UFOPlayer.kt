@@ -66,12 +66,11 @@ class UFOPlayer(
     private fun playTask(): TimerTask {
         return object : TimerTask() {
             override fun run() {
-                time++
 
-                if (time == currentRecord.time) {
+                if (++time >= currentRecord.time) {
                     controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)
 
-                    if (++currentId >= record.size) {
+                    if (++currentId >= record.size || time >= record.last().time) {
                         if (playContinuously)
                             updatePlayTime(0)
                         else {
