@@ -14,8 +14,8 @@ class CSVFile(filesDir: String, val title: String) {
         try {
             val content = data.joinToString("\n") { it.joinToString(",") }
             file.writeText(content)
-        } catch (e: IOException) {
-            Log.v("failed to save csv", e.toString())
+        } catch (e: Exception) {
+            "failed to save csv¥n$e".log()
             return false
         }
         return true

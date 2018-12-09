@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Toast
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -107,7 +108,10 @@ class UFOMainFragment : Fragment(),
     }
 
     private fun recordPause(checked: Boolean) {
-        recorder.apply { if (checked) pause() else start(controller.direction, currentPower()) }
+        recorder.apply {
+            if (checked) pause()
+            else if (recorder.isRecording) start(controller.direction, currentPower())
+        }
     }
 
     private fun openSaveDialog() {
@@ -131,7 +135,10 @@ class UFOMainFragment : Fragment(),
         AlertDialog.Builder(activity)
                 .setTitle(R.string.confirm_record_abandon_title)
                 .setMessage(R.string.confirm_record_abandon_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> recorder.initRecorder() }
+                .setPositiveButton(R.string.confirm_ok) { _, _ ->
+                    recordPauseButton.isChecked = false
+                    recorder.initRecorder()
+                }
                 .setNegativeButton(R.string.confirm_cancel) { _, _ -> recorder.endCancel() }
                 .create().show()
     }
@@ -140,7 +147,12 @@ class UFOMainFragment : Fragment(),
         AlertDialog.Builder(activity)
                 .setTitle(R.string.confirm_record_overwrite_title)
                 .setMessage(R.string.confirm_record_overwrite_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> recorder.save(activity!!, filename) }
+                .setPositiveButton(R.string.confirm_ok) { _, _ ->
+                    val res = recorder.save(activity!!, filename)
+                    val msg = if (res) "$filename${resources.getText(R.string.record_complete)}"
+                              else resources.getText(R.string.record_failed)
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
                 .setNegativeButton(R.string.confirm_cancel) { _, _ -> recorder.endCancel() }
                 .create().show()
     }

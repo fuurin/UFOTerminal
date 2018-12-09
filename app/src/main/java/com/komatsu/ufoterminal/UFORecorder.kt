@@ -9,7 +9,8 @@ class UFORecorder(
         private val listener: OnRecordTimeChangedListener
 ) : UFOController.OnUpdateRotationListener {
 
-    private var isRecording: Boolean = false
+    var isRecording: Boolean = false
+
     private var timer: Timer? = null
     private var time: Int = 0
     private var lastRecord: UFORecord = UFORecord(0, true, 0)
@@ -70,8 +71,8 @@ class UFORecorder(
         return File("${activity.filesDir}/$filename.csv").isFile
     }
 
-    fun save(activity: Activity, filename: String) {
-        if (record.isEmpty() || filename == "") return
+    fun save(activity: Activity, filename: String): Boolean {
+        if (record.isEmpty() || filename == "") return false
         val strRecord: List<List<String>> = record.map {
             listOf(
                     it.time.toString(),
@@ -79,8 +80,8 @@ class UFORecorder(
                     it.power.toString()
             )
         }
-        CSVFile(activity.filesDir.path, filename).write(strRecord)
         initRecorder()
+        return CSVFile(activity.filesDir.path, filename).write(strRecord)
     }
 
     override fun onUpdateRotation(power: Int, direction: Boolean) {

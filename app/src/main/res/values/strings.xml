@@ -16,8 +16,8 @@
     <string name="record_header">記録</string>
     <string name="record_start">記録スタート</string>
     <string name="record_stop">記録終了</string>
-    <string name="record_complete">保存しました</string>
-    <string name="record_failed">保存に失敗しました</string>
+    <string name="record_complete">を保存しました</string>
+    <string name="record_failed">保存されませんでした</string>
     <string name="record_abandoned">操作記録を破棄しました</string>
     <string name="record_save_title">操作記録の保存</string>
     <string name="record_save_message">操作記録ファイルの名前</string>
