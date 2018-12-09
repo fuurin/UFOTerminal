@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity(),
+        UFOInitialFragment.InitialFragmentListener,
         UFOConnectionFragment.ConnectionFragmentListener,
         UFOMainFragment.MainFragmentListener,
         UFORecordListFragment.RecordListFragmentListener {
@@ -34,6 +36,16 @@ class MainActivity : AppCompatActivity(),
         replaceFragment(mainFragment)
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && fm.backStackEntryCount <= 1) connectionFragment.confirmBleDisable()
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onStartDemo() {
+        Toast.makeText(this, "start demo", Toast.LENGTH_LONG).show()
+        // replaceFragment(mainFragment)
+    }
+
     override fun onDisconnectConfirm() {
         controller.pause()
     }
@@ -49,6 +61,10 @@ class MainActivity : AppCompatActivity(),
         if (playerFragment.isVisible) playerFragment.start()
     }
 
+    override fun onConfirmBleDisableFinished() {
+        finish()
+    }
+
     override fun onUFOMainFragmentViewCreated() {
         mainFragment.ready(controller, recorder)
     }
@@ -62,19 +78,6 @@ class MainActivity : AppCompatActivity(),
         playerFragment = UFOPlayerFragment() // どう頑張っても再生ボタンとシークバーが初期化されないのでフラグメントごと作り直すことにした
         playerFragment.initPlayer(this, fileName, controller)
         replaceFragment(playerFragment)
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode != KeyEvent.KEYCODE_BACK) {
-            return super.onKeyDown(keyCode, event)
-        } else {
-            if (fm.backStackEntryCount <= 1) connectionFragment.confirmBleDisable()
-            return false
-        }
-    }
-
-    override fun onConfirmBleDisableFinished() {
-        finish()
     }
 
     private fun setConnectionFragment() {

@@ -2,6 +2,7 @@ package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
 import java.util.*
+import java.util.concurrent.CancellationException
 
 
 //    正回転(右回り)が0x020101～0x020164
@@ -14,8 +15,8 @@ class UFOController(
 
     var power = 0
     var direction = true
-    private var isActive = false
 
+    private var isActive = false
     private val service = gatt.getService(UUID.fromString(SERVICE_UUID))
     private val characteristic = service.getCharacteristic(UUID.fromString(CHARACTERISTIC_UUID))
     private val rnd = Random()
@@ -102,7 +103,7 @@ class UFOController(
 
     fun stopRandomPower() {
         if (powerTimer == null) return // .?演算子がなんか効かないのでnullチェック
-        powerTimer?.cancel()
+        try { powerTimer?.cancel() } catch (e: CancellationException) {}
         powerTimer = null // timerはnullで破棄しないと終わらない
     }
 
@@ -118,7 +119,7 @@ class UFOController(
 
     fun stopRandomDirection() {
         if (directionTimer == null) return
-        directionTimer!!.cancel()
+        try { directionTimer?.cancel() } catch (e: CancellationException) {}
         directionTimer = null
     }
 

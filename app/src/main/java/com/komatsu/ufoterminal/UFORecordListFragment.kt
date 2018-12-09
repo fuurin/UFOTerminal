@@ -78,6 +78,7 @@ class UFORecordListFragment : Fragment(),
     private fun csvRecords(): List<UFORecordFile> {
         return File(filesDir).listFiles()
                 .filter { it.isFile && it.name.endsWith(".csv") }
+                .sortedByDescending { it.created() }
                 .map { UFORecordFile(it.name.removeSuffix(".csv"), it.created()) }
     }
 

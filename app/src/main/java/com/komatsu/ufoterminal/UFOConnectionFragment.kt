@@ -55,7 +55,6 @@ class UFOConnectionFragment : Fragment(),
     }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         if (context !is ConnectionFragmentListener)
             throw RuntimeException("$context must implement ConnectionFragmentListener")
         super.onAttach(context)

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UFOTerminal</string>
-    <string name="not_connected">～ 使い方 ～\n\nUFOSAの電源を入れる\n↓\n接続ボタンを押す\n↓\n接続完了\n↓\nUFOSAを自由に操作‼</string>
+    <string name="not_connected">～ 使い方 ～\n\nU.F.O. SA の電源を入れる\n↓\n接続ボタンを押す\n↓\n接続完了\n↓\nU.F.O. SA を自由に操作‼</string>
     <string name="connect">接続</string>
     <string name="disconnect">切断</string>
     <string name="connecting">接続中です…</string>

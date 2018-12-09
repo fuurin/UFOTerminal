@@ -112,6 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_marginHorizontal="30dp"
             android:backgroundTint="@color/colorPrimary"
             android:indeterminate="false"
             android:max="100"

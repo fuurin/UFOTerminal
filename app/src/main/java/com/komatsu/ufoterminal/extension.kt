@@ -13,6 +13,8 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 fun Any?.log() {
     Log.v("DEBUG", this.toString())
 }

@@ -7,6 +7,7 @@ import android.widget.EditText
 import java.io.File
 import java.nio.file.Files.delete
 import java.util.*
+import java.util.concurrent.CancellationException
 
 class UFORecorder(
         private val activity: Activity,
@@ -71,7 +72,7 @@ class UFORecorder(
 
     private fun stopRecord() {
         if (timer == null) return
-        timer?.cancel()
+        try { timer?.cancel() } catch (e: CancellationException) {}
         timer = null
     }
 
