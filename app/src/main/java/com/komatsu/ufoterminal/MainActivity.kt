@@ -1,11 +1,13 @@
 package com.komatsu.ufoterminal
 
 import android.bluetooth.BluetoothGatt
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.widget.Toast
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class MainActivity : AppCompatActivity(),
         UFOInitialFragment.InitialFragmentListener,
@@ -27,6 +29,11 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setConnectionFragment()
         initScreen()
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        // font 参照: https://qiita.com/aluceps/items/9c35e3ad2563f71401e2
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
     override fun onConnect(gatt: BluetoothGatt?) {
