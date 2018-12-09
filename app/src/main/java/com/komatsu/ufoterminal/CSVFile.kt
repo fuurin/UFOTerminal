@@ -10,11 +10,6 @@ class CSVFile(filesDir: String, val title: String) {
     val file = File("$filesDir/$title.csv")
     val created = file.created()
 
-    fun appendLine(data: List<String>): Boolean {
-        file.appendText(data.joinToString(",") + "\n")
-        return true
-    }
-
     fun write(data: List<List<String>>): Boolean {
         try {
             val content = data.joinToString("\n") { it.joinToString(",") }
@@ -24,17 +19,6 @@ class CSVFile(filesDir: String, val title: String) {
             return false
         }
         return true
-    }
-
-    fun readLines(line: Int, adapt: (List<String>) -> Any): List<Any> {
-        val data = mutableListOf<Any>()
-        if (!file.canRead()) return data
-        var counter = 0
-        file.forEachLine {
-            data.add(adapt(it.split(",")))
-            if (++counter >= line) return@forEachLine
-        }
-        return data.toList()
     }
 
     fun readAll(adapt: (List<String>) -> Any): List<Any> {

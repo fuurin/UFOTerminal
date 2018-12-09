@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onConnect(gatt: BluetoothGatt?) {
         mainFragment = UFOMainFragment()
-        recorder = UFORecorder(this, mainFragment)
+        recorder = UFORecorder(mainFragment)
         controller = UFOController(gatt, recorder)
         replaceFragment(mainFragment)
     }

@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:layout_margin="12dp"
-    android:padding="8dp"
     android:background="@drawable/text_frame"
-    >
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="4"
-        android:orientation="vertical"
-        android:layout_marginRight="16dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,11 +23,11 @@
             android:textAlignment="textStart">
 
             <TextView
-                android:text="@string/record_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/record_time"
                 android:textColor="@color/colorSubInfo"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/recordTime"
@@ -41,7 +42,7 @@
             android:id="@+id/recordTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -53,17 +54,17 @@
 
         <Button
             android:id="@+id/recordRename"
-            android:text="@string/record_rename"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/record_rename" />
 
         <Button
             android:id="@+id/recordDelete"
-            android:text="@string/record_delete"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/record_delete" />
 
     </LinearLayout>
 

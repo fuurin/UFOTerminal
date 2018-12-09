@@ -79,7 +79,7 @@ class UFOController(
         return updateRotation(power, direction)
     }
 
-    fun start(initPower: Int=power, initDirection: Boolean=direction) {
+    fun start(initPower: Int = power, initDirection: Boolean = direction) {
         isActive = true
         updateRotation(initPower, initDirection)
     }
@@ -87,7 +87,8 @@ class UFOController(
     fun pause() {
         if (!isActive) return // BT切断後pauseが呼ばれると無限ループするので止める．これとstart以外でisActiveはいじらない！
         isActive = false
-        while(!forceUpdateRotation(0, direction)){} // 0が送れないことがあるので止まるまで止め続ける
+        while (!forceUpdateRotation(0, direction)) {
+        } // 0が送れないことがあるので止まるまで止め続ける
     }
 
     fun stop() {
@@ -96,13 +97,16 @@ class UFOController(
         stopRandomDirection()
     }
 
-    fun startRandomPower(period: Long=CHANGE_POWER_PERIOD) {
+    fun startRandomPower(period: Long = CHANGE_POWER_PERIOD) {
         powerTimer = Timer()
         powerTimer?.scheduleAtFixedRate(randomPowerTask(), 0, period)
     }
 
     fun stopRandomPower() {
-        try { powerTimer?.cancel() } catch (e: CancellationException) {}
+        try {
+            powerTimer?.cancel()
+        } catch (e: CancellationException) {
+        }
         powerTimer = null // timerはnullで破棄しないと終わらない
     }
 
@@ -111,13 +115,16 @@ class UFOController(
         updateRotation(newPower)
     }
 
-    fun startRandomDirection(period: Long=CHANGE_DIR_PERIOD) {
+    fun startRandomDirection(period: Long = CHANGE_DIR_PERIOD) {
         directionTimer = Timer()
         directionTimer!!.scheduleAtFixedRate(randomDirectionTask(), 0, period)
     }
 
     fun stopRandomDirection() {
-        try { directionTimer?.cancel() } catch (e: CancellationException) {}
+        try {
+            directionTimer?.cancel()
+        } catch (e: CancellationException) {
+        }
         directionTimer = null
     }
 

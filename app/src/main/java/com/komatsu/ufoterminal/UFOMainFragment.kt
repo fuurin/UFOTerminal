@@ -1,11 +1,14 @@
 package com.komatsu.ufoterminal
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -74,6 +77,7 @@ class UFOMainFragment : Fragment(),
         controlButton?.isChecked = false // なぜかDisconnect時にnullになる
         controlRandomPowerButton?.isChecked = false
         controller.stop()
+        openSaveDialog()
     }
 
     private fun initView() {
@@ -104,6 +108,41 @@ class UFOMainFragment : Fragment(),
 
     private fun recordPause(checked: Boolean) {
         recorder.apply { if (checked) pause() else start(controller.direction, currentPower()) }
+    }
+
+    private fun openSaveDialog() {
+        val editView = EditText(activity)
+        val dialog = AlertDialog.Builder(activity)
+                .setTitle(R.string.record_save_title)
+                .setMessage(R.string.record_save_message)
+                .setView(editView.withMarginLayout())
+                .setPositiveButton(R.string.record_save) { _, _ ->
+                    val filename = editView.text.toString()
+                    if (recorder.checkOverwrite(activity!!, filename)) openOverwriteConfirmDialog(filename)
+                    else recorder.save(activity!!, filename)
+                }
+                .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
+                .setNeutralButton(R.string.record_cancel) { _, _ -> recorder.endCancel() }.create()
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+    }
+
+    private fun openRecordAbandonConfirmDialog() {
+        AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_record_abandon_title)
+                .setMessage(R.string.confirm_record_abandon_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> recorder.initRecorder() }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> recorder.endCancel() }
+                .create().show()
+    }
+
+    private fun openOverwriteConfirmDialog(filename: String) {
+        AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_record_overwrite_title)
+                .setMessage(R.string.confirm_record_overwrite_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> recorder.save(activity!!, filename) }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> recorder.endCancel() }
+                .create().show()
     }
 
     private fun openRecordList() {

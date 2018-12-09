@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    android:orientation="vertical"
     tools:context=".UFOPlayerFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginHorizontal="1dp"
-        android:text="@string/play_header"
-        android:textColor="@color/colorOnStrong"
-        android:textSize="16sp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/header"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:layout_marginBottom="5dp"/>
+        android:paddingStart="16dp"
+        android:paddingEnd="0dp"
+        android:text="@string/play_header"
+        android:textColor="@color/colorOnStrong"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/playTitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="ヤバいCSVファイルでUFOSAを動かしたったwww"
         android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -46,17 +47,16 @@
                 android:textAlignment="textStart">
 
                 <TextView
-                    android:text="@string/record_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/record_time"
                     android:textColor="@color/colorSubInfo"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/playCreatedTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2018/12/03 12:12:12"
                     android:textColor="@color/colorSubInfo"
                     android:textSize="12sp" />
 
@@ -70,11 +70,11 @@
                 android:textAlignment="textStart">
 
                 <TextView
-                    android:text="@string/record_length"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/record_length"
                     android:textColor="@color/colorSubInfo"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/playLength"
@@ -92,15 +92,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp">
 
             <ToggleButton
                 android:id="@+id/playContinuouslyButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textOn="@string/play_continuously"
-                android:textOff="@string/play_continuously"/>
+                android:textOff="@string/play_continuously"
+                android:textOn="@string/play_continuously" />
 
         </LinearLayout>
 
@@ -117,13 +118,12 @@
     <TextView
         android:id="@+id/playTimeText"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:layout_margin="5dp"
         android:background="@drawable/text_frame"
         android:gravity="center_vertical|end"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="0.0"
         android:textAlignment="gravity"
         android:textSize="32sp" />
 
@@ -138,10 +138,10 @@
         android:textAlignment="center" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/back1Button"
@@ -178,6 +178,6 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_margin="5dp"
-        android:text="@string/play_send_record"/>
+        android:text="@string/play_send_record" />
 
 </LinearLayout>

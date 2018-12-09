@@ -1,5 +1,6 @@
 package com.komatsu.ufoterminal
 
+import java.lang.Integer.min
 import java.util.*
 import java.util.concurrent.CancellationException
 
@@ -27,10 +28,10 @@ class UFOPlayer(
     }
 
     fun updatePlayTime(time: Int) {
-        this.time = time
         currentRecord = record.find { time <= it.time } ?: record.last()
+        this.time = min(time, currentRecord.time)
         currentId = record.indexOf(currentRecord)
-        listener?.onUpdateTime(time)
+        listener?.onUpdateTime(this.time)
     }
 
     fun start() {

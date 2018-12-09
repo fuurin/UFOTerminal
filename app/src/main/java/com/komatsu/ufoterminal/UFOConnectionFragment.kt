@@ -1,13 +1,11 @@
 package com.komatsu.ufoterminal
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +44,7 @@ class UFOConnectionFragment : Fragment(),
                     connector.disableBle()
                     listener.onConfirmBleDisableFinished()
                 }
-                .setNegativeButton(R.string.confirm_cancel) { _, _ -> listener.onConfirmBleDisableFinished()}
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> listener.onConfirmBleDisableFinished() }
                 .create().show()
     }
 

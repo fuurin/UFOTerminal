@@ -64,11 +64,11 @@ class UFORecordListFragment : Fragment(),
 
     private fun openOverwriteConfirmDialog(oldName: String, newName: String) {
         AlertDialog.Builder(activity)
-            .setTitle(R.string.confirm_record_overwrite_title)
-            .setMessage(R.string.confirm_record_overwrite_message)
-            .setPositiveButton(R.string.confirm_ok) { _, _ -> rename(oldName, newName) }
-            .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
-            .create().show()
+                .setTitle(R.string.confirm_record_overwrite_title)
+                .setMessage(R.string.confirm_record_overwrite_message)
+                .setPositiveButton(R.string.confirm_ok) { _, _ -> rename(oldName, newName) }
+                .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
+                .create().show()
     }
 
     private fun checkOverwrite(oldName: String, newName: String) {

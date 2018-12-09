@@ -6,7 +6,7 @@ import java.util.concurrent.CancellationException
 
 class UFOControllerSeekBarListener(
         private val controller: UFOController
-): SeekBar.OnSeekBarChangeListener {
+) : SeekBar.OnSeekBarChangeListener {
 
     var timer: Timer? = null
 
@@ -21,7 +21,10 @@ class UFOControllerSeekBarListener(
     override fun onStopTrackingTouch(p0: SeekBar?) {}
 
     private fun stopTimer() {
-        try { timer?.cancel() } catch (e: CancellationException) {}
+        try {
+            timer?.cancel()
+        } catch (e: CancellationException) {
+        }
         timer = null
     }
 

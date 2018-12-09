@@ -1,16 +1,11 @@
 package com.komatsu.ufoterminal
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.view.WindowManager
-import android.widget.EditText
 import java.io.File
-import java.nio.file.Files.delete
 import java.util.*
 import java.util.concurrent.CancellationException
 
 class UFORecorder(
-        private val activity: Activity,
         private val listener: OnRecordTimeChangedListener
 ) : UFOController.OnUpdateRotationListener {
 
@@ -25,6 +20,13 @@ class UFORecorder(
         fun onRecordStart()
         fun onRecordEndCancel()
         fun onRecordEnd()
+    }
+
+    fun initRecorder() {
+        record = mutableListOf()
+        lastRecord = UFORecord(0, true, 0)
+        time = 0
+        updateRecordTime()
     }
 
     fun start(direction: Boolean, power: Int) {
@@ -50,15 +52,42 @@ class UFORecorder(
     fun end() {
         stopRecord()
         isRecording = false
+
+        if (record.size <= 1) {
+            initRecorder()
+            return
+        }
+
         listener.onRecordEnd()
-        openSaveDialog()
+    }
+
+    fun endCancel() {
+        isRecording = true
+        listener.onRecordEndCancel()
+    }
+
+    fun checkOverwrite(activity: Activity, filename: String): Boolean {
+        return File("${activity.filesDir}/$filename.csv").isFile
+    }
+
+    fun save(activity: Activity, filename: String) {
+        if (record.isEmpty() || filename == "") return
+        val strRecord: List<List<String>> = record.map {
+            listOf(
+                    it.time.toString(),
+                    if (it.direction) "0" else "1",
+                    it.power.toString()
+            )
+        }
+        CSVFile(activity.filesDir.path, filename).write(strRecord)
+        initRecorder()
     }
 
     override fun onUpdateRotation(power: Int, direction: Boolean) {
         if (
-            !isRecording ||
-            lastRecord.time == time ||
-            (lastRecord.direction == direction && lastRecord.power == power.toByte())
+                !isRecording ||
+                lastRecord.time == time ||
+                (lastRecord.direction == direction && lastRecord.power == power.toByte())
         ) return
 
         val newRecord = UFORecord(time, direction, power.toByte())
@@ -71,80 +100,11 @@ class UFORecorder(
     }
 
     private fun stopRecord() {
-        if (timer == null) return
-        try { timer?.cancel() } catch (e: CancellationException) {}
+        try {
+            timer?.cancel()
+        } catch (e: CancellationException) {
+        }
         timer = null
-    }
-
-    private fun endCancel() {
-        isRecording = true
-        listener.onRecordEndCancel()
-    }
-
-    private fun openSaveDialog() {
-        if (record.size <= 1) {
-            initRecorder()
-            listener.onRecordEnd()
-            return
-        }
-        val editView = EditText(activity)
-        val dialogBuilder = AlertDialog.Builder(activity)
-        dialogBuilder
-            .setTitle(R.string.record_save_title)
-            .setMessage(R.string.record_save_message)
-            .setView(editView.withMarginLayout())
-            .setPositiveButton(R.string.record_save) { _, _ -> checkOverwrite(editView.text.toString()) }
-            .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
-            .setNeutralButton(R.string.record_cancel) { _, _ -> endCancel() }
-        val dialog = dialogBuilder.create()
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-    }
-
-    private fun openRecordAbandonConfirmDialog() {
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.confirm_record_abandon_title)
-                .setMessage(R.string.confirm_record_abandon_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> initRecorder() }
-                .setNegativeButton(R.string.confirm_cancel) { _, _ -> endCancel() }
-                .create().show()
-    }
-
-    private fun openOverwriteConfirmDialog(filename: String) {
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.confirm_record_overwrite_title)
-                .setMessage(R.string.confirm_record_overwrite_message)
-                .setPositiveButton(R.string.confirm_ok) { _, _ -> save(filename) }
-                .setNegativeButton(R.string.confirm_cancel) { _, _ -> endCancel() }
-                .create().show()
-    }
-
-    private fun checkOverwrite(filename: String) {
-        if (File("${activity.filesDir}/$filename.csv").isFile) {
-            openOverwriteConfirmDialog(filename)
-        } else {
-            save(filename)
-        }
-    }
-
-    private fun save(filename: String) {
-        if (record.isEmpty() || filename == "") return
-        val strRecord: List<List<String>> = record.map {
-            listOf(
-                it.time.toString(),
-                if (it.direction) "0" else "1",
-                it.power.toString()
-            )
-        }
-        CSVFile(activity.filesDir.path, filename).write(strRecord)
-        initRecorder()
-    }
-
-    private fun initRecorder() {
-        record = mutableListOf()
-        lastRecord = UFORecord(0, true, 0)
-        time = 0
-        updateRecordTime()
     }
 
     private fun recordTask(): TimerTask {
