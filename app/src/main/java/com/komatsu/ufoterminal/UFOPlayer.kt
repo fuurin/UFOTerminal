@@ -13,6 +13,8 @@ class UFOPlayer(
         )
     } as List<UFORecord>
 
+    var playContinuously: Boolean = false
+
     private var time: Int = 0
     private var currentId: Int = 0
     private var currentRecord: UFORecord = record[currentId]
@@ -69,8 +71,12 @@ class UFOPlayer(
                     controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)
 
                     if (++currentId >= record.size) {
-                        stopPlay()
-                        Timer().schedule(playFinishTask(), 1000)
+                        if (playContinuously)
+                            updatePlayTime(0)
+                        else {
+                            stopPlay()
+                            Timer().schedule(playFinishTask(), 1000)
+                        }
                     } else {
                         currentRecord = record[currentId]
                     }

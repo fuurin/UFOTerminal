@@ -60,15 +60,17 @@ class UFOPlayerFragment : Fragment(),
     }
 
     private fun initView() {
+        playTitleText.text = file.title
         playCreatedTime.text = file.created
         playLength.text = player.record.last().time.recordTimeFormat()
-        playTitleText.text = file.title
+        playContinuouslyButton.isChecked = false
         playButton.isChecked = false
         playTimeText.text = 0.recordTimeFormat()
         playTimeSeekBar.max = player.record.last().time
     }
 
     private fun attachEvents() {
+        playContinuouslyButton.setOnClickListener { player.playContinuously = (this as ToggleButton).isChecked }
         playButton.setOnClickListener { playing((it as ToggleButton).isChecked) }
         playTimeSeekBar.setOnSeekBarChangeListener(playerSeekBarListener)
         back1Button.setOnClickListener { player.backward(10) }
