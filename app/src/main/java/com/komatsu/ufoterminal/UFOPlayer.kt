@@ -1,5 +1,6 @@
 package com.komatsu.ufoterminal
 
+import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
 import java.util.concurrent.CancellationException
@@ -52,11 +53,11 @@ class UFOPlayer(
     }
 
     fun forward(plus: Int) {
-        updatePlayTime(time + plus)
+        updatePlayTime(min(time + plus, lastRecord.time))
     }
 
     fun backward(minus: Int) {
-        updatePlayTime(time - minus)
+        updatePlayTime(max(time - minus, 0))
     }
 
     private fun stopPlay() {
@@ -68,18 +69,19 @@ class UFOPlayer(
         return object : TimerTask() {
             override fun run() {
 
-                if (++time >= currentRecord.time) {
+                if (time >= currentRecord.time) {
                     while(controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)) {}
+                    currentRecord = record[currentId++]
+                }
 
-                    if (++currentId >= record.size || time >= lastRecord.time) {
-                        if (playContinuously)
-                            updatePlayTime(0)
-                        else {
-                            stopPlay()
-                            Timer().schedule(playFinishTask(), 1000)
-                        }
+                time++
+
+                if (currentId >= record.size || time >= lastRecord.time) {
+                    if (playContinuously) {
+                        updatePlayTime(0)
                     } else {
-                        currentRecord = record[currentId]
+                        stopPlay()
+                        Timer().schedule(playFinishTask(), 1000)
                     }
                 }
 
