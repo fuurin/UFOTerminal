@@ -11,7 +11,7 @@ class UFOPlayer(
 
     val record = file.readAll {
         UFORecord(
-                it[0].toInt(), it[1] === "0", it[2].toByte()
+                it[0].toInt(), it[1] == "0", it[2].toByte()
         )
     } as List<UFORecord>
 
