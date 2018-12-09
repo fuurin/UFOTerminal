@@ -48,6 +48,7 @@
     <string name="confirm_record_overwrite_title">記録の上書き</string>
     <string name="confirm_record_overwrite_message">同じ名前のファイルがあります．\n上書きしますか？</string>
     <string name="play_header">再生</string>
+    <string name="play_continuously">連続再生</string>
     <string name="play_start">再生</string>
     <string name="play_pause">一時停止</string>
     <string name="play_back_origin">最初に戻る</string>

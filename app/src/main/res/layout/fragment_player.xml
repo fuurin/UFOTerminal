@@ -22,47 +22,79 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:textAlignment="textStart">
+        android:orientation="horizontal">
 
-        <TextView
-            android:text="@string/record_time"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorSubInfo"
-            android:textSize="12sp"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/playCreatedTime"
-            android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:textAlignment="textStart">
+
+                <TextView
+                    android:text="@string/record_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSubInfo"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/playCreatedTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2018/12/03 12:12:12"
+                    android:textColor="@color/colorSubInfo"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:textAlignment="textStart">
+
+                <TextView
+                    android:text="@string/record_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSubInfo"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/playLength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSubInfo"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="2018/12/03 12:12:12"
-            android:textColor="@color/colorSubInfo"
-            android:textSize="12sp" />
+            android:layout_weight="1"
+            android:paddingLeft="15dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <ToggleButton
+                android:id="@+id/playContinuouslyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textOn="@string/play_continuously"
+                android:textOff="@string/play_continuously"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:textAlignment="textStart">
-
-        <TextView
-            android:text="@string/record_length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorSubInfo"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/playLength"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorSubInfo"
-            android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
