@@ -26,7 +26,7 @@ class UFOConnectionFragment : Fragment(),
     }
 
     interface ConnectionFragmentListener {
-        fun onConnect(gatt: BluetoothGatt)
+        fun onConnect(gatt: BluetoothGatt?)
         fun onDisconnectConfirm()
         fun onDisconnectStart()
         fun onDisconnectCancel()

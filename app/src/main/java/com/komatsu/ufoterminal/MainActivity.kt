@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(),
         initScreen()
     }
 
-    override fun onConnect(gatt: BluetoothGatt) {
+    override fun onConnect(gatt: BluetoothGatt?) {
         mainFragment = UFOMainFragment()
         recorder = UFORecorder(this, mainFragment)
         controller = UFOController(gatt, recorder)
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onStartDemo() {
         Toast.makeText(this, "start demo", Toast.LENGTH_LONG).show()
-        // replaceFragment(mainFragment)
+        onConnect(null)
     }
 
     override fun onDisconnectConfirm() {

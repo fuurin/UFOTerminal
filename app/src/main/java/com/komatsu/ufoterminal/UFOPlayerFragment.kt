@@ -70,7 +70,7 @@ class UFOPlayerFragment : Fragment(),
     }
 
     private fun attachEvents() {
-        playContinuouslyButton.setOnClickListener { player.playContinuously = (this as ToggleButton).isChecked }
+        playContinuouslyButton.apply { setOnClickListener { player.playContinuously = (it as ToggleButton).isChecked } }
         playButton.setOnClickListener { playing((it as ToggleButton).isChecked) }
         playTimeSeekBar.setOnSeekBarChangeListener(playerSeekBarListener)
         back1Button.setOnClickListener { player.backward(10) }

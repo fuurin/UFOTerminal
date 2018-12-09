@@ -55,11 +55,28 @@ class UFORecordListFragment : Fragment(),
                 .setTitle(R.string.record_rename_title)
                 .setMessage(R.string.record_rename_message)
                 .setView(editView.withMarginLayout())
-                .setPositiveButton(R.string.record_save) { _, _ -> rename(fileName, editView.text.toString()) }
+                .setPositiveButton(R.string.record_save) { _, _ -> checkOverwrite(fileName, editView.text.toString()) }
                 .setNeutralButton(R.string.record_cancel) { _, _ -> }
         val dialog = dialogBuilder.create()
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
+    }
+
+    private fun openOverwriteConfirmDialog(oldName: String, newName: String) {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.confirm_record_overwrite_title)
+            .setMessage(R.string.confirm_record_overwrite_message)
+            .setPositiveButton(R.string.confirm_ok) { _, _ -> rename(oldName, newName) }
+            .setNegativeButton(R.string.confirm_cancel) { _, _ -> }
+            .create().show()
+    }
+
+    private fun checkOverwrite(oldName: String, newName: String) {
+        if (File("${activity?.filesDir}/$newName.csv").isFile) {
+            openOverwriteConfirmDialog(oldName, newName)
+        } else {
+            rename(oldName, newName)
+        }
     }
 
     override fun onRecordDeleteStart(fileName: String) {

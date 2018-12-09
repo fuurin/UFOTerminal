@@ -34,6 +34,7 @@ class UFOInitialFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (!DEMO_MODE) return
         initialImage.setOnLongClickListener { listener.onStartDemo(); true }
     }
 }

@@ -1,6 +1,7 @@
 package com.komatsu.ufoterminal
 
 import java.util.*
+import java.util.concurrent.CancellationException
 
 class UFOPlayer(
         file: CSVFile,
@@ -57,8 +58,7 @@ class UFOPlayer(
     }
 
     private fun stopPlay() {
-        if (timer == null) return // ?.演算子が効かないのでnullチェック
-        timer?.cancel()
+        try { timer?.cancel() } catch (e: CancellationException) {}
         timer = null
     }
 

@@ -9,7 +9,7 @@ import java.util.concurrent.CancellationException
 //    逆回転(左回り)が0x020181～0x0201e4
 //    停止が0x020100、0x020180
 class UFOController(
-        private val gatt: BluetoothGatt,
+        private val gatt: BluetoothGatt?,
         private val listener: OnUpdateRotationListener? = null
 ) {
 
@@ -17,8 +17,8 @@ class UFOController(
     var direction = true
 
     private var isActive = false
-    private val service = gatt.getService(UUID.fromString(SERVICE_UUID))
-    private val characteristic = service.getCharacteristic(UUID.fromString(CHARACTERISTIC_UUID))
+    private val service = gatt?.getService(UUID.fromString(SERVICE_UUID))
+    private val characteristic = service?.getCharacteristic(UUID.fromString(CHARACTERISTIC_UUID))
     private val rnd = Random()
 
     private var powerTimer: Timer? = null
@@ -102,7 +102,6 @@ class UFOController(
     }
 
     fun stopRandomPower() {
-        if (powerTimer == null) return // .?演算子がなんか効かないのでnullチェック
         try { powerTimer?.cancel() } catch (e: CancellationException) {}
         powerTimer = null // timerはnullで破棄しないと終わらない
     }
@@ -118,7 +117,6 @@ class UFOController(
     }
 
     fun stopRandomDirection() {
-        if (directionTimer == null) return
         try { directionTimer?.cancel() } catch (e: CancellationException) {}
         directionTimer = null
     }
@@ -135,8 +133,8 @@ class UFOController(
 
     private fun forceUpdateRotation(power: Int, direction: Boolean): Boolean {
         val newPower = power or if (direction == DIRECTION_RIGHT) 0 else ADDITION_TO_REVERSE
-        characteristic.value = byteArrayOf(MACHINE_CODE, VORZE_CODE, newPower.toByte())
-        if (!gatt.writeCharacteristic(characteristic)) return false
+        characteristic?.value = byteArrayOf(MACHINE_CODE, VORZE_CODE, newPower.toByte())
+        if (gatt != null && !gatt.writeCharacteristic(characteristic)) return false
 
         this.power = power
         this.direction = direction

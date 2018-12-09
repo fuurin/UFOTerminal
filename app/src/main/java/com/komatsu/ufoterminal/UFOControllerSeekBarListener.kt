@@ -21,7 +21,6 @@ class UFOControllerSeekBarListener(
     override fun onStopTrackingTouch(p0: SeekBar?) {}
 
     private fun stopTimer() {
-        if (timer == null) return
         try { timer?.cancel() } catch (e: CancellationException) {}
         timer = null
     }
