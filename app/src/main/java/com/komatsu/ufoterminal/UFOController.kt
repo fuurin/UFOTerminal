@@ -98,6 +98,7 @@ class UFOController(
     }
 
     fun startRandomPower(period: Long = CHANGE_POWER_PERIOD) {
+        if (powerTimer != null) return
         powerTimer = Timer()
         powerTimer?.scheduleAtFixedRate(randomPowerTask(), 0, period)
     }
@@ -116,6 +117,7 @@ class UFOController(
     }
 
     fun startRandomDirection(period: Long = CHANGE_DIR_PERIOD) {
+        if (directionTimer != null) return
         directionTimer = Timer()
         directionTimer!!.scheduleAtFixedRate(randomDirectionTask(), 0, period)
     }
@@ -130,12 +132,12 @@ class UFOController(
 
     fun startRightDirection() {
         stopRandomDirection()
-        updateRotation(power, DIRECTION_RIGHT)
+        while(updateRotation(power, DIRECTION_RIGHT)) {}
     }
 
     fun startLeftDirection() {
         stopRandomDirection()
-        updateRotation(power, DIRECTION_LEFT)
+        while(updateRotation(power, DIRECTION_LEFT)) {}
     }
 
     private fun forceUpdateRotation(power: Int, direction: Boolean): Boolean {

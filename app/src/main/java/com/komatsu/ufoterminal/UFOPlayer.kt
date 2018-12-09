@@ -68,7 +68,7 @@ class UFOPlayer(
             override fun run() {
 
                 if (++time >= currentRecord.time) {
-                    controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)
+                    while(controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)) {}
 
                     if (++currentId >= record.size || time >= record.last().time) {
                         if (playContinuously)
