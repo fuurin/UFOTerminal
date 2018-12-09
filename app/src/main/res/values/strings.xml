@@ -2,6 +2,7 @@
     <string name="app_name">UFOTerminal</string>
     <string name="how_to_use">～ 使い方 ～</string>
     <string name="description">1.   U.F.O. SA の電源を入れる\n\n2.   接続 ボタンを押す\n\n3.   接続完了\n\n4.   U.F.O. SA を自由に操作</string>
+    <string name="copyright">fuurin 2018/12 v1.0.0</string>
     <string name="connect">接続</string>
     <string name="disconnect">切断</string>
     <string name="connecting">接続中です…</string>
@@ -18,6 +19,7 @@
     <string name="record_start">記録スタート</string>
     <string name="record_stop">記録終了</string>
     <string name="record_complete">を保存しました</string>
+    <string name="record_overwrite">を上書き保存しました</string>
     <string name="record_failed">保存されませんでした</string>
     <string name="record_abandoned">操作記録を破棄しました</string>
     <string name="record_save_title">操作記録の保存</string>

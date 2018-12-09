@@ -39,4 +39,17 @@
         android:textSize="20sp"
         tools:ignore="MissingPrefix" />
 
+    <TextView
+        fontPath="fonts/NotoSansCJKjp-hinted/NotoSansCJKjp-Thin.otf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="end"
+        android:text="@string/copyright"
+        android:textSize="12sp"
+        tools:ignore="MissingPrefix" />
+
 </LinearLayout>

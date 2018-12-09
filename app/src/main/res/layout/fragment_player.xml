@@ -31,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -96,24 +97,15 @@
             android:paddingStart="15dp"
             android:paddingEnd="0dp">
 
-            <ToggleButton
-                android:id="@+id/playContinuouslyButton"
+            <Button
+                android:id="@+id/sendRecordButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textOff="@string/play_continuously"
-                android:textOn="@string/play_continuously" />
+                android:text="@string/play_send_record" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-    <ToggleButton
-        android:id="@+id/playButton"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginVertical="5dp"
-        android:textOff="@string/play_start"
-        android:textOn="@string/play_pause" />
 
     <TextView
         android:id="@+id/playTimeText"
@@ -140,7 +132,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_margin="5dp"
+        android:layout_marginVertical="5dp"
         android:orientation="horizontal">
 
         <Button
@@ -173,11 +165,20 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/sendRecordButton"
+    <ToggleButton
+        android:id="@+id/playContinuouslyButton"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_margin="5dp"
-        android:text="@string/play_send_record" />
+        android:layout_marginVertical="5dp"
+        android:textOff="@string/play_continuously"
+        android:textOn="@string/play_continuously" />
+
+    <ToggleButton
+        android:id="@+id/playButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginVertical="5dp"
+        android:textOff="@string/play_start"
+        android:textOn="@string/play_pause" />
 
 </LinearLayout>

@@ -123,7 +123,12 @@ class UFOMainFragment : Fragment(),
                 .setPositiveButton(R.string.record_save) { _, _ ->
                     val filename = editView.text.toString()
                     if (recorder.checkOverwrite(activity!!, filename)) openOverwriteConfirmDialog(filename)
-                    else recorder.save(activity!!, filename)
+                    else {
+                        val res = recorder.save(activity!!, filename)
+                        val msg = if (res) "$filename${resources.getText(R.string.record_complete)}"
+                        else resources.getText(R.string.record_failed)
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
                 }
                 .setNegativeButton(R.string.record_abandon) { _, _ -> openRecordAbandonConfirmDialog() }
                 .setNeutralButton(R.string.record_cancel) { _, _ -> recorder.endCancel() }.create()
@@ -149,7 +154,7 @@ class UFOMainFragment : Fragment(),
                 .setMessage(R.string.confirm_record_overwrite_message)
                 .setPositiveButton(R.string.confirm_ok) { _, _ ->
                     val res = recorder.save(activity!!, filename)
-                    val msg = if (res) "$filename${resources.getText(R.string.record_complete)}"
+                    val msg = if (res) "$filename${resources.getText(R.string.record_overwrite)}"
                               else resources.getText(R.string.record_failed)
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 }

@@ -21,6 +21,7 @@ class UFOPlayer(
     private var currentId: Int = 0
     private var currentRecord: UFORecord = record[currentId]
     private var timer: Timer? = null
+    private val lastRecord = record.last()
 
     interface PlayerListener {
         fun onUpdateTime(time: Int)
@@ -28,7 +29,7 @@ class UFOPlayer(
     }
 
     fun updatePlayTime(time: Int) {
-        currentRecord = record.find { time <= it.time } ?: record.last()
+        currentRecord = record.find { time <= it.time } ?: lastRecord
         this.time = min(time, currentRecord.time)
         currentId = record.indexOf(currentRecord)
         listener?.onUpdateTime(this.time)
@@ -70,7 +71,7 @@ class UFOPlayer(
                 if (++time >= currentRecord.time) {
                     while(controller.updateRotation(currentRecord.power.toInt(), currentRecord.direction)) {}
 
-                    if (++currentId >= record.size || time >= record.last().time) {
+                    if (++currentId >= record.size || time >= lastRecord.time) {
                         if (playContinuously)
                             updatePlayTime(0)
                         else {
@@ -82,7 +83,7 @@ class UFOPlayer(
                     }
                 }
 
-                listener?.onUpdateTime(time)
+                listener?.onUpdateTime(min(time, lastRecord.time))
             }
         }
     }
